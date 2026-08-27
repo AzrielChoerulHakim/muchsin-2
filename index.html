@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="id" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mohammad Muchsin & Rekan | Arsitektur Kepercayaan</title>
+    <meta name="description" content="Firma hukum premium di Jakarta yang berfokus pada resolusi sengketa korporasi dan struktur kontrak kompleks.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#162660',
+                        bone: '#F1E4D1',
+                        powder: '#D0E6FD',
+                        ink: '#111318',
+                    },
+                    fontFamily: {
+                        serif: ['"DM Serif Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    letterSpacing: {
+                        tighter: '-0.04em',
+                        tight: '-0.02em',
+                        widest: '0.15em',
+                        micro: '0.2em',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --cursor-size: 8px;
+        }
+
+        /* Base Resets & Performance Hardening */
+        html {
+            background-color: #F1E4D1;
+            scroll-behavior: auto;
+        }
+        
+        body {
+            background-color: #F1E4D1;
+            color: #111318;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overscroll-behavior-y: none;
+        }
+
+        @media (pointer: fine) {
+            body { cursor: none; }
+        }
+
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            #custom-cursor { display: none !important; }
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Optimization */
+        .will-change-transform { will-change: transform; }
+        .will-change-opacity { will-change: opacity; }
+
+        ::selection { background: #162660; color: #F1E4D1; }
+
+        /* Materiality: Subdued Paper Grain */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100svh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply;
+        }
+
+        /* Global Continuity Axis */
+        .global-axis {
+            position: fixed;
+            top: 0;
+            width: 1px;
+            height: 100svh;
+            background-color: rgba(22, 38, 96, 0.1);
+            z-index: 40;
+            pointer-events: none;
+            transform-origin: top;
+            transform: scaleY(0);
+            will-change: transform;
+        }
+        .global-axis.left { left: 8%; }
+        @media (min-width: 768px) {
+            .global-axis.left { left: 15%; }
+        }
+
+        /* Architectural Cursor */
+        #custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            background-color: #162660;
+            border-radius: 0; 
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            will-change: width, height, transform;
+            transition: width 0.3s cubic-bezier(0.76, 0, 0.24, 1), 
+                        height 0.3s cubic-bezier(0.76, 0, 0.24, 1), 
+                        border-radius 0.3s ease, background-color 0.3s ease;
+        }
+
+        .cursor-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: #162660;
+            opacity: 0;
+            position: absolute;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+        }
+
+        #custom-cursor.hover-active {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 1px solid #F1E4D1;
+        }
+        #custom-cursor.hover-cta {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background-color: #F1E4D1;
+            border: none;
+            mix-blend-mode: normal;
+        }
+        #custom-cursor.hover-cta .cursor-text { opacity: 1; }
+
+        /* Typography spatial adjustments */
+        .text-hero-massive { font-size: clamp(3.5rem, 15vw, 20rem); line-height: 0.9; letter-spacing: -0.02em; white-space: nowrap; }
+        
+        /* CHAMBER TYPOGRAPHY STABILITY */
+        .text-chamber-massive { 
+            font-size: clamp(2.5rem, 10vw, 11rem); 
+            line-height: 0.85; 
+            letter-spacing: -0.04em; 
+            white-space: nowrap;
+            will-change: transform, opacity;
+            margin: 0;
+            padding: 0;
+        }
+        @media (max-width: 768px) {
+            .text-chamber-massive {
+                white-space: normal;
+                width: 90vw;
+                font-size: clamp(3rem, 15vw, 6rem);
+            }
+        }
+        
+        .chamber-text-1 {
+            will-change: transform, opacity;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Image Treatments */
+        .img-architectural {
+            filter: grayscale(100%) contrast(1.15) brightness(0.85);
+            will-change: transform, filter;
+            background-color: #162660;
+        }
+
+        /* Signature Visual SVG Styling */
+        .axis-line { fill: none; stroke: #F1E4D1; stroke-width: 1; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0.15; }
+        .axis-dash { fill: none; stroke: #F1E4D1; stroke-width: 1; stroke-dasharray: 4 4; opacity: 0; }
+        .mm-line { fill: none; stroke: #F1E4D1; stroke-width: 10; stroke-dasharray: 100; stroke-dashoffset: 100; stroke-linecap: square; stroke-linejoin: miter; }
+        .svg-meta { fill: rgba(241, 228, 209, 0.5); font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0; }
+        .svg-tick { fill: none; stroke: rgba(241, 228, 209, 0.5); stroke-width: 1; opacity: 0; }
+        
+        .principle-panel { will-change: transform, opacity, filter; }
+
+        /* LEGAL ORBITAL SYSTEM - SCOPED STYLES (SECTION 02) */
+        .practice-node { cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none; }
+        /* Layer separation for position vs scale */
+        .practice-node-pos { will-change: transform; } 
+        .practice-node-touch { pointer-events: bounding-box; fill: transparent; }
+        .practice-node:focus-visible .practice-ring { stroke: #D0E6FD; stroke-width: 1.5; opacity: 1; }
+        
+        /* New Animation Classes for Composition */
+        .practice-desc-anim { will-change: transform, opacity; }
+        .practice-title-anim { will-change: transform, opacity; }
+
+        .practice-path { stroke-dasharray: 3000; stroke-dashoffset: 3000; will-change: stroke-dashoffset, stroke-opacity, stroke-width; transition: stroke-opacity 0.6s ease, stroke-width 0.6s ease; }
+        .practice-core, .practice-dot, .practice-ring, .practice-conn { will-change: transform, opacity, stroke, fill; }
+        .practice-core-pulse { transform-origin: center; }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .noise-overlay, .global-axis, #custom-cursor { display: none !important; }
+            body { cursor: auto; }
+            .img-architectural { filter: grayscale(0%) !important; transform: none !important; }
+            .will-change-transform, .will-change-opacity, .practice-desc-anim, .practice-title-anim { will-change: auto; transform: none !important; opacity: 1 !important; filter: none !important; }
+            * { transition: none !important; }
+            .practice-path { stroke-dashoffset: 0 !important; }
+        }
+    </style>
+</head>
+<body class="bg-bone text-ink">
+
+    <!-- Ambient / Structural Elements -->
+    <div class="noise-overlay" aria-hidden="true"></div>
+    <div class="global-axis left" id="axis-l" aria-hidden="true"></div>
+    
+    <div id="custom-cursor" aria-hidden="true">
+        <span class="cursor-text">BUKA</span>
+    </div>
+
+    <!-- Editorial Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 py-6 md:py-8 px-6 md:px-12 mix-blend-difference text-bone pointer-events-none">
+        <div class="max-w-[95vw] mx-auto flex justify-between items-start text-[10px] md:text-xs uppercase tracking-micro font-medium">
+            <div class="w-1/3 pointer-events-auto">
+                <a href="#hero" data-cursor="hover" class="block font-serif text-xl md:text-2xl normal-case tracking-normal hover:opacity-50 transition-opacity">
+                    MMR.
+                </a>
+            </div>
+            <div class="hidden md:flex w-1/3 justify-center gap-12 pointer-events-auto">
+                <a href="#firm" data-cursor="hover" class="hover:opacity-50 transition-opacity">Institusi</a>
+                <a href="#practice" data-cursor="hover" class="hover:opacity-50 transition-opacity">Praktik</a>
+                <a href="#people" data-cursor="hover" class="hover:opacity-50 transition-opacity">Individu</a>
+            </div>
+            <div class="w-1/3 flex justify-end pointer-events-auto">
+                <a href="#contact" data-cursor="hover" class="border-b border-bone/30 pb-1 hover:border-bone transition-colors duration-300">Konsultasi</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- 01 - HERO -->
+            <section id="hero" class="relative h-[100svh] w-full overflow-hidden bg-bone flex flex-col justify-end pb-12 md:pb-24 px-6 md:px-12">
+                <div class="absolute inset-0 z-0 pointer-events-none hero-layer-grid" aria-hidden="true">
+                    <div class="arch-line h-[1px] w-full top-[35%] left-0 scale-x-0 origin-left" id="hl-1"></div>
+                    <div class="arch-line h-[1px] w-full top-[65%] left-0 scale-x-0 origin-right" id="hl-2"></div>
+                    <div class="arch-line w-[1px] h-[100svh] left-[20%] top-0 scale-y-0 origin-top" id="vl-1"></div>
+                    <div class="arch-line w-[1px] h-[100svh] right-[20%] top-0 scale-y-0 origin-bottom" id="vl-2"></div>
+                </div>
+
+                <div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none hero-layer-img">
+                    <div class="w-[90vw] h-[70svh] md:w-[65vw] md:h-[80svh] overflow-hidden" style="clip-path: inset(100% 0 0 0);" id="hero-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop" 
+                             alt="Arsitektur Institusi Hukum" class="w-full h-full object-cover img-architectural scale-125 origin-center" id="hero-img" loading="eager">
+                    </div>
+                </div>
+
+                <div class="relative z-20 w-full max-w-[95vw] mx-auto mix-blend-exclusion text-bone pointer-events-none hero-layer-text flex flex-col justify-end h-full">
+                    <div class="absolute top-[20svh] left-0 md:left-[15%] overflow-hidden">
+                        <p class="text-[9px] md:text-[10px] uppercase tracking-widest font-medium opacity-0 transform translate-y-full hero-meta leading-relaxed">
+                            Mohammad Muchsin & Rekan<br>
+                            Struktur / Batas / Hak
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col w-full relative z-20 pb-4">
+                        <div class="overflow-hidden w-full relative z-20">
+                            <h1 class="font-serif text-hero-massive hero-text-1 opacity-0 transform translate-y-[120%] origin-bottom will-change-transform pb-2">
+                                MENJAGA
+                            </h1>
+                        </div>
+                        <div class="overflow-hidden w-full flex justify-start md:justify-end md:pr-[5vw] relative z-10">
+                            <h1 class="font-serif text-hero-massive hero-text-2 opacity-0 transform translate-y-[120%] origin-bottom will-change-transform pt-1 md:pt-0 pb-2">
+                                STRUKTUR.
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 02 - TRUST: THE STRUCTURAL LOCK -->
+            <section id="chamber" class="relative h-[400vh] w-full bg-ink flex flex-col items-center justify-start">
+                <div class="sticky top-0 h-[100svh] w-full chamber-sticky">
+                    
+                    <div class="absolute inset-0 pointer-events-none z-10 lock-container" aria-hidden="true">
+                        <div class="absolute w-full h-[1px] bg-bone/20 top-[25%] lock-h-1"></div>
+                        <div class="absolute w-full h-[1px] bg-bone/20 bottom-[25%] lock-h-2"></div>
+                        <div class="absolute w-[1px] h-full bg-bone/20 left-[10%] md:left-[20%] lock-v-1"></div>
+                        <div class="absolute w-[1px] h-full bg-bone/20 right-[10%] md:right-[20%] lock-v-2"></div>
+                        
+                        <div class="absolute top-[25%] left-[10%] md:left-[20%] w-3 h-3 border-l border-t border-bone/50 lock-tick transform -translate-x-1/2 -translate-y-1/2"></div>
+                        <div class="absolute bottom-[25%] right-[10%] md:right-[20%] w-3 h-3 border-r border-b border-bone/50 lock-tick transform translate-x-1/2 translate-y-1/2"></div>
+                    </div>
+
+                    <div class="chamber-viewport absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-20">
+                        <div class="chamber-type-stage absolute inset-0 w-full h-full">
+                            
+                            <div class="chamber-text-anchor absolute left-1/2 top-1/2 w-full flex justify-center items-center" style="transform: translate(-50%, -50%);">
+                                <h2 class="chamber-text-1 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-7xl text-bone text-center tracking-tight w-[90%] max-w-5xl leading-tight m-0 p-0">
+                                    KEPERCAYAAN TIDAK DIJANJIKAN.
+                                </h2>
+                            </div>
+
+                            <div class="chamber-text-anchor absolute left-1/2 top-1/2 w-full flex justify-center items-center" style="transform: translate(-50%, -50%); perspective: 1500px; transform-style: preserve-3d;">
+                                <h2 class="chamber-text-2 font-serif text-chamber-massive text-bone text-center m-0 p-0 relative">
+                                    IA DIBANGUN.
+                                </h2>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 03 - SIGNATURE -->
+            <section id="signature" class="relative h-[400vh] bg-ink w-full z-10 border-t border-bone/5">
+                <div class="sticky top-0 h-[100svh] w-full overflow-hidden flex items-center justify-center">
+                    <div class="absolute top-24 left-6 md:top-12 md:left-12 text-[9px] md:text-[10px] uppercase tracking-widest text-bone/40 font-medium sig-meta opacity-0 leading-relaxed z-20">
+                        MMR / SYSTEM 01<br>COORDINATE 00<br>STRUCTURAL AXIS
+                    </div>
+                    <div class="absolute bottom-12 right-6 md:right-12 text-[9px] md:text-[10px] uppercase tracking-widest text-bone/40 font-medium sig-meta opacity-0 text-right leading-relaxed z-20">
+                        GEOMETRI HUKUM<br>RESOLUSI FINAL
+                    </div>
+
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-6 md:p-12 z-10 mm-svg-wrapper">
+                        <svg viewBox="0 0 1000 600" class="w-full h-auto max-w-5xl" preserveAspectRatio="xMidYMid meet" aria-label="Mohammad Muchsin Monogram Blueprint">
+                            <path class="axis-line axis-h" d="M 0 150 L 1000 150" pathLength="100" />
+                            <path class="axis-line axis-h" d="M 0 450 L 1000 450" pathLength="100" />
+                            <path class="axis-dash axis-h-dash" d="M 0 350 L 1000 350" />
+                            <path class="axis-line axis-v" d="M 250 0 L 250 600" pathLength="100" />
+                            <path class="axis-line axis-v" d="M 500 0 L 500 600" pathLength="100" />
+                            <path class="axis-line axis-v" d="M 750 0 L 750 600" pathLength="100" />
+                            <g class="svg-annotation">
+                                <line x1="240" y1="150" x2="260" y2="150" class="svg-tick" />
+                                <line x1="490" y1="150" x2="510" y2="150" class="svg-tick" />
+                                <line x1="740" y1="150" x2="760" y2="150" class="svg-tick" />
+                                <line x1="240" y1="450" x2="260" y2="450" class="svg-tick" />
+                                <line x1="490" y1="450" x2="510" y2="450" class="svg-tick" />
+                                <line x1="740" y1="450" x2="760" y2="450" class="svg-tick" />
+                                <text x="260" y="140" class="svg-meta">AXIS A</text>
+                                <text x="510" y="140" class="svg-meta">CTR LINE</text>
+                                <text x="760" y="140" class="svg-meta">AXIS B</text>
+                                <text x="380" y="370" class="svg-meta" style="font-size: 8px;">N 01</text>
+                                <text x="630" y="370" class="svg-meta" style="font-size: 8px;">N 02</text>
+                            </g>
+                            <path class="mm-line mm-outer" d="M 250 150 L 250 450" pathLength="100" />
+                            <path class="mm-line mm-outer" d="M 750 150 L 750 450" pathLength="100" />
+                            <path class="mm-line mm-center" d="M 500 150 L 500 450" pathLength="100" />
+                            <path class="mm-line mm-diag-1" d="M 250 150 L 375 350" pathLength="100" />
+                            <path class="mm-line mm-diag-2" d="M 500 150 L 375 350" pathLength="100" />
+                            <path class="mm-line mm-diag-3" d="M 750 150 L 625 350" pathLength="100" />
+                            <path class="mm-line mm-diag-4" d="M 500 150 L 625 350" pathLength="100" />
+                        </svg>
+                    </div>
+
+                    <div class="relative z-20 w-full flex flex-col items-center mix-blend-difference pointer-events-none mt-[30svh] md:mt-[40svh] px-4">
+                        <div class="h-[1px] w-0 bg-bone/50 mb-6 sig-statement-line origin-center"></div>
+                        <div class="text-center sig-statement opacity-0 transform translate-y-6 will-change-transform">
+                            <h3 class="font-serif text-3xl md:text-5xl lg:text-6xl text-bone mb-2 tracking-tight drop-shadow-md">MEMBANGUN BATAS.</h3>
+                            <h3 class="font-serif text-3xl md:text-5xl lg:text-6xl text-bone text-opacity-40 italic tracking-tight">MENDEFINISIKAN HAK.</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 04 - THE FIRM -->
+            <section id="firm" class="relative py-32 md:py-64 px-6 md:px-12 bg-bone overflow-hidden z-20">
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none z-0 mix-blend-multiply" aria-hidden="true">
+                    <h2 class="font-serif text-[28vw] leading-none text-navy opacity-[0.03] select-none tracking-tighter" id="ghost-text">
+                        INSTITUSI
+                    </h2>
+                </div>
+
+                <div class="max-w-[95vw] mx-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24">
+                    <div class="md:col-span-3 flex flex-col justify-between">
+                        <p class="text-[10px] uppercase tracking-widest font-medium text-navy/40 mb-12 flex items-center gap-4">
+                            <span class="w-4 h-[1px] bg-navy/40"></span> 01 / Manifesto Firma
+                        </p>
+                        <div class="text-[9px] md:text-[10px] uppercase tracking-widest font-medium text-navy/40 mb-12 hidden md:block leading-relaxed">
+                            Jakarta, Indonesia<br>Est. 2010<br><br><span class="opacity-50">Struktur Hukum Absolut</span>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-9 relative">
+                        <h3 class="font-serif text-[clamp(2.25rem,4.5vw,4.5rem)] leading-[1.05] text-navy mb-16 md:mb-24 w-full max-w-5xl tracking-tight firm-heading">
+                            <span class="block overflow-hidden relative w-full max-w-full">
+                                <span class="block will-change-transform firm-line w-full max-w-full pt-2 pb-3 origin-bottom">Hukum adalah arsitektur</span>
+                            </span>
+                            <span class="block overflow-hidden relative w-full max-w-full">
+                                <span class="block will-change-transform firm-line w-full max-w-full pt-2 pb-3 origin-bottom">yang menentukan batas,</span>
+                            </span>
+                            <span class="block overflow-hidden relative w-full max-w-full">
+                                <span class="block will-change-transform firm-line w-full max-w-full pt-2 pb-3 origin-bottom">struktur, dan hak.</span>
+                            </span>
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start relative">
+                            <div class="absolute left-0 top-0 w-[1px] h-full bg-navy/10 hidden md:block origin-top firm-divider"></div>
+                            <div class="text-sm md:text-base leading-relaxed text-ink/80 font-light max-w-md md:pl-12 firm-copy opacity-0 will-change-transform">
+                                <p class="mb-8">Mohammad Muchsin & Rekan tidak sekadar merespons konflik; kami membangun kerangka hukum yang kokoh untuk melindunginya. Setiap perkara menuntut struktur penyelesaian yang spesifik.</p>
+                                <p>Pendekatan kami mengutamakan presisi analitis, kerahasiaan absolut, dan strategi yang dirancang khusus untuk menghadapi kompleksitas institusional maupun personal yang memiliki tekanan tinggi.</p>
+                            </div>
+                            <div class="w-full h-[50vh] md:h-[60vh] overflow-hidden group firm-image-wrap">
+                                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069&auto=format&fit=crop" alt="Struktur Institusional Hukum" class="w-full h-full object-cover img-architectural scale-110" id="firm-img" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 05 - PRACTICE (LEGAL ORBITAL SYSTEM - RECOMPOSED) -->
+            <section id="practice" class="relative h-[100svh] min-h-[650px] pt-24 pb-8 md:pt-28 md:pb-12 bg-navy text-bone overflow-hidden z-20 flex flex-col justify-between">
+                
+                <!-- Background Ambient Gradient / Lines (Subtle) -->
+                <div class="absolute inset-0 pointer-events-none opacity-20">
+                    <div class="absolute top-[10%] left-0 w-full h-[1px] bg-bone/10"></div>
+                    <div class="absolute bottom-[10%] left-0 w-full h-[1px] bg-bone/10"></div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="w-full max-w-[95vw] mx-auto px-6 md:px-12 relative z-10 flex-shrink-0">
+                    <p class="text-[10px] uppercase tracking-widest font-medium text-bone/40 flex items-center gap-4 practice-label opacity-0 transform translate-y-4 will-change-transform">
+                        <span class="w-4 h-[1px] bg-bone/40"></span> 02 / Arsip Perkara
+                    </p>
+                </div>
+
+                <!-- NEW COMPOSITION: 3 Columns on Desktop, Vertical Order on Mobile -->
+                <div class="relative flex-grow flex flex-col lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-center lg:justify-items-stretch w-full max-w-[95vw] mx-auto z-10 gap-6 md:gap-8 lg:gap-12 px-2 md:px-8">
+                    
+                    <!-- MOBILE 3 / DESKTOP 1: DESCRIPTION (LEFT) -->
+                    <div class="order-3 lg:order-1 w-full flex items-center justify-center lg:justify-end text-center lg:text-right practice-desc-wrapper z-20">
+                        <div class="lg:border-r border-bone/20 lg:pr-8 w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[320px]">
+                            <!-- Subtle separator for mobile only -->
+                            <div class="w-12 h-[1px] bg-bone/20 mb-6 mx-auto lg:hidden"></div>
+                            <p class="text-sm md:text-base font-light text-bone/70 leading-relaxed practice-desc-anim" id="practice-panel-desc">
+                                Pendampingan dan pembelaan dalam perkara pidana dengan strategi hukum yang terukur, presisi, dan berorientasi pada perlindungan hak.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- MOBILE 2 / DESKTOP 2: ORBIT (CENTER ANCHOR) -->
+                    <div class="order-2 lg:order-2 flex items-center justify-center w-full z-10" id="practice-system-wrapper">
+                        <!-- Orbit Size bounds carefully calibrated -->
+                        <div class="w-[min(80vw,38svh)] md:w-[min(55vw,50svh)] lg:w-[min(42vw,65svh)] max-w-[700px] aspect-square relative pointer-events-auto">
+                            
+                            <svg viewBox="0 0 1000 1000" class="w-full h-full overflow-visible" id="practice-svg" role="img" aria-label="Sistem Orbital Hukum MMR">
+                                <g id="practice-tracks-parallax">
+                                    <!-- Connection Lines -->
+                                    <line x1="500" y1="500" x2="500" y2="500" class="practice-conn opacity-0" stroke="#D0E6FD" stroke-width="0.75" stroke-dasharray="2 3" id="practice-conn-1" />
+                                    <line x1="500" y1="500" x2="500" y2="500" class="practice-conn opacity-0" stroke="#D0E6FD" stroke-width="0.75" stroke-dasharray="2 3" id="practice-conn-2" />
+                                    <line x1="500" y1="500" x2="500" y2="500" class="practice-conn opacity-0" stroke="#D0E6FD" stroke-width="0.75" stroke-dasharray="2 3" id="practice-conn-3" />
+                                    <line x1="500" y1="500" x2="500" y2="500" class="practice-conn opacity-0" stroke="#D0E6FD" stroke-width="0.75" stroke-dasharray="2 3" id="practice-conn-4" />
+
+                                    <!-- TRACKS -->
+                                    <ellipse cx="500" cy="500" rx="220" ry="140" transform="rotate(15 500 500)" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.15" class="practice-path practice-path-1" id="practice-track-1" />
+                                    <ellipse cx="490" cy="510" rx="320" ry="210" transform="rotate(-12 490 510)" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.15" class="practice-path practice-path-2" id="practice-track-2" />
+                                    <ellipse cx="515" cy="485" rx="410" ry="270" transform="rotate(22 515 485)" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.15" class="practice-path practice-path-3" id="practice-track-3" />
+                                    <ellipse cx="495" cy="515" rx="490" ry="330" transform="rotate(-25 495 515)" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.15" class="practice-path practice-path-4" id="practice-track-4" />
+
+                                    <!-- Abstract Dust -->
+                                    <g class="practice-ambient" opacity="0.15">
+                                        <circle cx="300" cy="250" r="1" fill="#F1E4D1" />
+                                        <circle cx="700" cy="800" r="1.5" fill="#F1E4D1" />
+                                        <circle cx="850" cy="350" r="1" fill="#F1E4D1" />
+                                        <circle cx="150" cy="700" r="1" fill="#F1E4D1" />
+                                        <path d="M 300 250 L 315 235 L 340 242" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-dasharray="1 3" />
+                                        <path d="M 150 700 L 125 730" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-dasharray="1 3" />
+                                        <path d="M 500 150 L 500 160 M 150 500 L 160 500 M 500 840 L 500 850 M 840 500 L 850 500" stroke="#F1E4D1" stroke-width="0.5" opacity="0.3" />
+                                    </g>
+                                    
+                                    <!-- NODES -->
+                                    <g class="practice-node-pos" id="practice-pos-1">
+                                        <g class="practice-node" id="practice-node-1" data-id="1" role="button" tabindex="0" aria-label="Pilih Hukum Pidana">
+                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <rect x="-4" y="-4" width="8" height="8" fill="#F1E4D1" class="practice-dot" transform="rotate(45)" />
+                                            <circle cx="0" cy="0" r="14" fill="none" stroke="#F1E4D1" stroke-width="0.75" class="practice-ring" stroke-opacity="0.3" />
+                                            <circle cx="0" cy="0" r="18" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-dasharray="2 3" class="practice-ring" stroke-opacity="0.15" />
+                                        </g>
+                                    </g>
+
+                                    <g class="practice-node-pos" id="practice-pos-2">
+                                        <g class="practice-node" id="practice-node-2" data-id="2" role="button" tabindex="0" aria-label="Pilih Hukum Perdata">
+                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <rect x="-3" y="-3" width="6" height="6" fill="#F1E4D1" class="practice-dot" />
+                                            <circle cx="0" cy="0" r="16" fill="none" stroke="#F1E4D1" stroke-width="0.5" class="practice-ring" stroke-opacity="0.3" />
+                                            <path d="M 0 -22 L 0 22 M -22 0 L 22 0" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.2" class="practice-ring" />
+                                            <rect x="-16" y="-16" width="32" height="32" fill="none" stroke="#F1E4D1" stroke-width="0.25" stroke-opacity="0.15" class="practice-ring" />
+                                        </g>
+                                    </g>
+
+                                    <g class="practice-node-pos" id="practice-pos-3">
+                                        <g class="practice-node" id="practice-node-3" data-id="3" role="button" tabindex="0" aria-label="Pilih Hukum Islam">
+                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <circle cx="0" cy="0" r="3" fill="#F1E4D1" class="practice-dot" />
+                                            <circle cx="0" cy="0" r="14" fill="none" stroke="#F1E4D1" stroke-width="0.25" class="practice-ring" stroke-opacity="0.2" />
+                                            <polygon points="0,-16 11,-11 16,0 11,11 0,16 -11,11 -16,0 -11,-11" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-dasharray="2 2" class="practice-ring" stroke-opacity="0.4" />
+                                            <path d="M 0 -8 L 0 -16 M 0 8 L 0 16 M -8 0 L -16 0 M 8 0 L 16 0" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.3" class="practice-ring" />
+                                        </g>
+                                    </g>
+
+                                    <g class="practice-node-pos" id="practice-pos-4">
+                                        <g class="practice-node" id="practice-node-4" data-id="4" role="button" tabindex="0" aria-label="Pilih Hukum Tata Usaha Negara">
+                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <path d="M -4 0 L 4 0 M 0 -4 L 0 4" stroke="#F1E4D1" stroke-width="1" class="practice-dot" />
+                                            <circle cx="0" cy="0" r="12" fill="none" stroke="#F1E4D1" stroke-width="0.5" class="practice-ring" stroke-opacity="0.3" />
+                                            <circle cx="0" cy="0" r="20" fill="none" stroke="#F1E4D1" stroke-width="0.25" class="practice-ring" stroke-opacity="0.2" />
+                                            <path d="M -18 -20 L -20 -20 L -20 -18 M 18 -20 L 20 -20 L 20 -18 M -18 20 L -20 20 L -20 18 M 18 20 L 20 20 L 20 18" fill="none" stroke="#F1E4D1" stroke-width="0.5" class="practice-ring" stroke-opacity="0.4" />
+                                        </g>
+                                    </g>
+                                </g>
+
+                                <!-- Central Core -->
+                                <g id="practice-core-parallax">
+                                    <g id="practice-core" class="practice-core">
+                                        <g class="practice-core-pulse">
+                                            <circle cx="500" cy="500" r="32" fill="none" stroke="#F1E4D1" stroke-width="0.25" stroke-dasharray="1 3" opacity="0.3"/>
+                                            <circle cx="500" cy="500" r="22" fill="none" stroke="#F1E4D1" stroke-width="0.5" opacity="0.5"/>
+                                            <circle cx="500" cy="500" r="6" fill="#F1E4D1" opacity="0.9"/>
+                                            <polygon points="500,482 518,500 500,518 482,500" fill="none" stroke="#F1E4D1" stroke-width="0.5" opacity="0.6"/>
+                                            <path d="M 500 450 L 500 550 M 450 500 L 550 500" stroke="#F1E4D1" stroke-width="0.5" opacity="0.15" />
+                                        </g>
+                                    </g>
+                                </g>
+
+                            </svg>
+
+                        </div>
+                    </div>
+
+                    <!-- MOBILE 1 / DESKTOP 3: TITLE (RIGHT) -->
+                    <div class="order-1 lg:order-3 w-full flex flex-col items-center lg:items-start text-center lg:text-left practice-title-wrapper z-20">
+                        <div class="text-[10px] md:text-xs font-medium font-sans text-powder/50 practice-title-anim mb-2 lg:mb-4" id="practice-panel-num">01</div>
+                        <h3 class="font-serif text-[clamp(2.25rem,6vw,4.5rem)] leading-[0.95] tracking-tight text-bone practice-title-anim w-full lg:max-w-[400px]" style="text-wrap: balance;" id="practice-panel-title">
+                            HUKUM PIDANA
+                        </h3>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 06 - PRINCIPLES -->
+            <section id="principles" class="relative h-[400vh] bg-bone w-full border-t border-ink/5">
+                <div class="sticky top-0 h-[100svh] w-full flex items-center overflow-hidden px-6 md:px-12">
+                    <div class="absolute top-24 left-6 md:top-32 md:left-12 text-[10px] uppercase tracking-widest font-medium text-navy/40 flex items-center gap-4 z-20">
+                        <span class="w-4 h-[1px] bg-navy/40"></span> 03 / Fondasi Etika
+                    </div>
+                    <div class="absolute left-6 md:left-12 top-1/2 transform -translate-y-1/2 h-[40vh] w-[1px] bg-navy/10 z-10 hidden md:block">
+                        <div class="w-[3px] h-1/3 bg-navy absolute left-[-1px] transition-all duration-700 ease-out" id="prin-marker"></div>
+                    </div>
+
+                    <div class="max-w-[95vw] mx-auto w-full relative h-[70svh] md:h-[70vh] flex items-center justify-center z-10">
+                        <div class="absolute w-full flex flex-col items-center text-center principle-panel px-4" id="prin-1">
+                            <div class="overflow-hidden mb-4 md:mb-6"><span class="block text-[9px] md:text-[10px] uppercase tracking-widest text-navy/40">Ruang I</span></div>
+                            <h2 class="font-serif text-[14vw] md:text-[10vw] text-navy uppercase tracking-tighter leading-none mb-6 md:mb-8 drop-shadow-sm">Integritas</h2>
+                            <p class="max-w-xl font-light text-ink/70 leading-relaxed text-sm md:text-lg">Kejujuran mutlak dalam analisis. Kami menyajikan realitas hukum tanpa distorsi, memungkinkan klien membuat keputusan berbasis fakta objektif, bukan sekadar janji.</p>
+                        </div>
+                        <div class="absolute w-full flex flex-col items-center text-center principle-panel opacity-0 scale-105 px-4" id="prin-2" style="filter: blur(8px);">
+                            <div class="overflow-hidden mb-4 md:mb-6"><span class="block text-[9px] md:text-[10px] uppercase tracking-widest text-navy/40">Ruang II</span></div>
+                            <h2 class="font-serif text-[14vw] md:text-[10vw] text-navy uppercase tracking-tighter leading-none mb-6 md:mb-8 drop-shadow-sm">Kerahasiaan</h2>
+                            <p class="max-w-xl font-light text-ink/70 leading-relaxed text-sm md:text-lg">Struktur dinding tertutup. Informasi klien diperlakukan sebagai aset paling berharga yang dilindungi oleh sistem etika dan operasional yang sangat ketat.</p>
+                        </div>
+                        <div class="absolute w-full flex flex-col items-center text-center principle-panel opacity-0 scale-105 px-4" id="prin-3" style="filter: blur(8px);">
+                            <div class="overflow-hidden mb-4 md:mb-6"><span class="block text-[9px] md:text-[10px] uppercase tracking-widest text-navy/40">Ruang III</span></div>
+                            <h2 class="font-serif text-[14vw] md:text-[10vw] text-navy uppercase tracking-tighter leading-none mb-6 md:mb-8 drop-shadow-sm">Keadilan</h2>
+                            <p class="max-w-xl font-light text-ink/70 leading-relaxed text-sm md:text-lg">Resolusi yang berimbang. Mengembalikan ketertiban dalam kekacauan perselisihan melalui argumentasi logis, presisi, dan supremasi hukum.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 07 - PEOPLE -->
+            <section id="people" class="relative py-24 md:py-48 bg-ink text-bone px-6 md:px-12 border-t border-bone/10 overflow-hidden">
+                <div class="max-w-[95vw] mx-auto relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-16 md:mb-32">
+                        <div class="md:col-span-4">
+                            <p class="text-[10px] uppercase tracking-widest font-medium text-bone/40 flex items-center gap-4">
+                                <span class="w-4 h-[1px] bg-bone/40"></span> 04 / Variabel Manusia
+                            </p>
+                        </div>
+                        <div class="md:col-span-8">
+                            <h2 class="font-serif text-3xl md:text-5xl lg:text-6xl max-w-4xl leading-[1.15] text-bone/90 people-heading opacity-0 transform translate-y-8 will-change-transform">
+                                Kekuatan institusi bertumpu sepenuhnya pada intelektualitas individu di dalamnya.
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full border-t border-bone/10 pt-16 md:pt-32 flex flex-col lg:flex-row gap-12 lg:gap-24 items-center">
+                        <div class="w-full lg:w-[45%] h-[50vh] md:h-[70vh] lg:h-[90vh] overflow-hidden" data-cursor="hover">
+                            <div class="w-full h-full overflow-hidden" style="clip-path: inset(100% 0 0 0);" id="portrait-wrap">
+                                <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1974&auto=format&fit=crop" alt="Mohammad Muchsin" class="w-full h-full object-cover img-architectural object-top scale-110 filter grayscale contrast-125" id="people-img" loading="lazy">
+                            </div>
+                        </div>
+                        
+                        <div class="w-full lg:w-[55%] flex flex-col justify-center pb-12 lg:pb-24">
+                            <div class="overflow-hidden mb-6">
+                                <p class="text-[10px] uppercase tracking-widest text-powder/80 transform translate-y-full will-change-transform nameplate-meta">Arsitek Utama / Managing Partner</p>
+                            </div>
+                            <h3 class="font-serif text-5xl md:text-7xl lg:text-[7vw] leading-[0.9] mb-12 tracking-tighter text-bone break-words">
+                                <span class="block overflow-hidden pb-1"><span class="block transform translate-y-full will-change-transform nameplate-text">Mohammad</span></span>
+                                <span class="block overflow-hidden pb-1"><span class="block transform translate-y-full will-change-transform nameplate-text">Muchsin</span></span>
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 border-t border-bone/10 pt-12 nameplate-details opacity-0">
+                                <div>
+                                    <h4 class="text-[9px] md:text-[10px] uppercase tracking-widest text-bone/50 mb-4">Spesialisasi</h4>
+                                    <ul class="text-xs md:text-sm font-light text-bone/80 space-y-2">
+                                        <li>Resolusi Sengketa Korporasi</li>
+                                        <li>Struktur Kontrak Kompleks</li>
+                                        <li>Litigasi Komersial</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-[9px] md:text-[10px] uppercase tracking-widest text-bone/50 mb-4">Rekam Jejak</h4>
+                                    <p class="text-xs md:text-sm font-light text-bone/80 leading-relaxed lg:pr-8">Membawa ketajaman analitis puluhan tahun dalam merancang fondasi perlindungan hukum bagi klien korporasi dan individu berprofil tinggi.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 08 - CTA -->
+            <section id="contact" class="h-[100svh] bg-navy text-bone flex flex-col justify-center px-6 md:px-12 relative overflow-hidden z-20">
+                <div class="absolute inset-0 pointer-events-none opacity-20 cta-room-lines" aria-hidden="true">
+                    <div class="w-full h-[1px] bg-bone absolute top-0 scale-x-0 origin-left" id="cta-line-t"></div>
+                    <div class="w-full h-[1px] bg-bone absolute bottom-0 scale-x-0 origin-right" id="cta-line-b"></div>
+                </div>
+
+                <div class="max-w-[95vw] mx-auto w-full relative z-10 flex flex-col justify-between h-full py-16 md:py-24">
+                    <div class="flex justify-between items-start">
+                        <p class="text-[10px] uppercase tracking-widest font-medium text-powder/60 flex items-center gap-4">
+                            <span class="w-4 h-[1px] bg-powder/60"></span> 05 / Inisiasi
+                        </p>
+                        <div class="w-2 h-2 bg-powder rounded-none animate-pulse"></div>
+                    </div>
+                    
+                    <div class="text-center w-full flex flex-col items-center justify-center flex-grow pt-12 md:pt-0">
+                        <div class="overflow-hidden w-full max-w-full">
+                            <h2 class="font-serif text-[11vw] uppercase text-bone leading-[0.85] tracking-tighter cursor-none hover:text-powder transition-colors duration-700 break-words" data-cursor="cta" onclick="window.open('https://wa.me/628110000000', '_blank')">
+                                Langkah Anda<br>Berikutnya<br>Dimulai Di Sini.
+                            </h2>
+                        </div>
+                        <div class="relative mt-16 md:mt-24 group">
+                            <div class="absolute top-1/2 left-[-100vw] w-[100vw] h-[1px] bg-bone/30 transform -translate-y-1/2 scale-x-0 origin-right transition-transform duration-700 ease-out group-hover:scale-x-100 pointer-events-none hidden md:block"></div>
+                            <div class="absolute top-1/2 right-[-100vw] w-[100vw] h-[1px] bg-bone/30 transform -translate-y-1/2 scale-x-0 origin-left transition-transform duration-700 ease-out group-hover:scale-x-100 pointer-events-none hidden md:block"></div>
+                            <a href="https://wa.me/628110000000" target="_blank" rel="noopener noreferrer" data-cursor="cta" class="relative z-10 overflow-hidden flex items-center justify-center border border-bone/30 w-48 h-16 md:w-64 md:h-20 bg-navy transition-all duration-700 hover:border-bone hover:bg-bone hover:text-navy cta-button">
+                                <span class="relative z-10 text-[10px] md:text-xs font-medium tracking-widest uppercase transition-transform duration-500 group-hover:scale-105">Buka Dialog</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-end border-t border-bone/20 pt-8 mt-12 gap-8 md:gap-0">
+                        <div class="flex flex-col gap-2 text-xs font-light text-bone/60 w-full md:w-auto">
+                            <span class="uppercase tracking-widest text-[9px] text-powder/60">Korespondensi</span>
+                            <a href="mailto:kontak@muchsinrekan.law" class="hover:text-bone transition-colors duration-300" data-cursor="hover">kontak@muchsinrekan.law</a>
+                            <a href="https://wa.me/628110000000" class="hover:text-bone transition-colors duration-300" target="_blank" rel="noopener noreferrer" data-cursor="hover">+62 811 000 0000</a>
+                        </div>
+                        <div class="text-xs font-light text-bone/60 uppercase tracking-widest text-left md:text-right w-full md:w-auto">
+                            Jakarta, Indonesia
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 09 - FOOTER -->
+            <footer class="bg-bone text-ink py-16 px-6 md:px-12 h-[100svh] flex flex-col justify-end relative overflow-hidden z-20">
+                <div class="max-w-[95vw] mx-auto w-full flex flex-col md:flex-row justify-between items-end gap-16 md:gap-0 border-t border-ink/20 pt-12">
+                    <div class="w-full md:w-auto">
+                        <h2 class="font-serif text-[24vw] md:text-[16vw] leading-[0.75] tracking-tighter mb-8 md:mb-12 origin-bottom-left footer-logo will-change-transform">
+                            MMR.
+                        </h2>
+                        <div class="flex flex-wrap gap-8 md:gap-16 text-[10px] uppercase tracking-widest font-medium">
+                            <a href="#firm" class="hover:opacity-50 transition-opacity" data-cursor="hover">Institusi</a>
+                            <a href="#practice" class="hover:opacity-50 transition-opacity" data-cursor="hover">Praktik</a>
+                            <a href="#people" class="hover:opacity-50 transition-opacity" data-cursor="hover">Individu</a>
+                            <a href="#contact" class="hover:opacity-50 transition-opacity" data-cursor="hover">Konsultasi</a>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-auto text-left md:text-right flex flex-col justify-between items-start md:items-end h-full">
+                        <div class="overflow-hidden mb-12 md:mb-32 w-full">
+                            <p class="font-serif text-2xl md:text-4xl text-navy italic transform translate-y-full footer-tagline will-change-transform">
+                                Arsitektur Kepercayaan.
+                            </p>
+                        </div>
+                        <p class="text-[9px] uppercase tracking-widest text-ink/40">
+                            &copy; 2026 Mohammad Muchsin & Rekan.<br>Semua Hak Dilindungi Undang-Undang.
+                        </p>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia("(pointer: coarse)").matches;
+
+            const select = (sel) => document.querySelector(sel);
+            const selectAll = (sel) => document.querySelectorAll(sel);
+
+            // --- 01. LENIS ---
+            const lenis = new Lenis({
+                duration: 1.5,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: !prefersReducedMotion,
+                smoothTouch: false,
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0);
+
+
+            // --- 02. CURSOR ---
+            const cursor = select('#custom-cursor');
+            if (cursor && !isTouchDevice && !prefersReducedMotion) {
+                const xTo = gsap.quickTo(cursor, "x", {duration: 0.2, ease: "power3.out"});
+                const yTo = gsap.quickTo(cursor, "y", {duration: 0.2, ease: "power3.out"});
+                window.addEventListener('mousemove', (e) => { xTo(e.clientX); yTo(e.clientY); });
+                selectAll('[data-cursor]').forEach(el => {
+                    el.addEventListener('mouseenter', () => { const state = el.getAttribute('data-cursor'); if(state) cursor.classList.add(`hover-${state}`); });
+                    el.addEventListener('mouseleave', () => { const state = el.getAttribute('data-cursor'); if(state) cursor.classList.remove(`hover-${state}`); });
+                });
+            }
+
+
+            // --- 03. AXIS ---
+            const axes = selectAll(".global-axis");
+            if (axes.length && !prefersReducedMotion) {
+                gsap.to(axes, { scaleY: 1, ease: "none", scrollTrigger: { trigger: "#smooth-wrapper", start: "top top", end: "bottom bottom", scrub: true } });
+            }
+
+
+            // --- 04. HERO ---
+            if (select('#hero')) {
+                const tlHero = gsap.timeline({ defaults: { ease: "expo.inOut" } });
+                if(select(".hero-text-1")) gsap.set(".hero-text-1", { y: "100%" });
+                if(select(".hero-text-2")) gsap.set(".hero-text-2", { y: "100%" });
+                if(select("#hero-img")) gsap.set("#hero-img", { scale: 1.25, filter: "grayscale(100%) contrast(1.15) brightness(0.85)" });
+
+                tlHero.to("#hl-1, #hl-2", { scaleX: 1, duration: 2, stagger: 0.2 })
+                      .to("#vl-1, #vl-2", { scaleY: 1, duration: 2, stagger: 0.2 }, "-=1.8")
+                      .to("#hero-img-wrap", { clipPath: "inset(0% 0 0 0)", duration: 2.5 }, "-=1.5")
+                      .to("#hero-img", { scale: 1, filter: "grayscale(30%) contrast(1.05) brightness(0.9)", duration: 3.5, ease: "power2.out" }, "-=2.5")
+                      .to(".hero-meta", { y: "0%", opacity: 1, duration: 1.5 }, "-=2")
+                      .to(".hero-text-1", { y: "0%", opacity: 1, duration: 2, ease: "power3.out" }, "-=2")
+                      .to(".hero-text-2", { y: "0%", opacity: 1, duration: 2, ease: "power3.out" }, "-=1.7")
+                      .to("#hero-grid .arch-line", { backgroundColor: "rgba(241, 228, 209, 0.3)", duration: 1 }, "-=1");
+
+                if (!isTouchDevice && !prefersReducedMotion) {
+                    const heroSection = select('#hero');
+                    const gridX = gsap.quickTo(".hero-layer-grid", "x", {duration: 0.8, ease: "power2.out"});
+                    const gridY = gsap.quickTo(".hero-layer-grid", "y", {duration: 0.8, ease: "power2.out"});
+                    const imgX = gsap.quickTo(".hero-layer-img", "x", {duration: 1.2, ease: "power2.out"});
+                    const imgY = gsap.quickTo(".hero-layer-img", "y", {duration: 1.2, ease: "power2.out"});
+                    const textX = gsap.quickTo(".hero-layer-text", "x", {duration: 0.5, ease: "power2.out"});
+                    const textY = gsap.quickTo(".hero-layer-text", "y", {duration: 0.5, ease: "power2.out"});
+
+                    heroSection.addEventListener('mousemove', (e) => {
+                        const xPos = (e.clientX / window.innerWidth - 0.5);
+                        const yPos = (e.clientY / window.innerHeight - 0.5);
+                        gridX(xPos * 20); gridY(yPos * 20); imgX(xPos * -30); imgY(yPos * -30); textX(xPos * 15); textY(yPos * 15);
+                    });
+                }
+            }
+
+
+            // --- 05. CHAMBER: THE STRUCTURAL NARRATIVE ---
+            if (select('#chamber')) {
+                // FIXED: Clear properties to prevent layout conflicts, positioning anchored rigidly by HTML wrapper.
+                gsap.set(".chamber-text-1", { clearProps: "all" });
+                gsap.set(".chamber-text-2", { clearProps: "all" });
+
+                // STRICT initial scale & origin locking Tanpa xPercent/yPercent.
+                gsap.set(".chamber-text-1", { autoAlpha: 0, scale: 0.9, transformOrigin: "50% 50%" });
+                gsap.set(".chamber-text-2", { autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%" });
+                
+                gsap.set(".lock-container", { autoAlpha: 1 });
+                gsap.set(".lock-h-1, .lock-h-2", { scaleX: 0 });
+                gsap.set(".lock-v-1, .lock-v-2", { scaleY: 0 });
+                gsap.set(".lock-tick", { autoAlpha: 0 });
+
+                // [NEW] GEOMETRIC FRACTURE GENERATOR (One-time setup)
+                const chamberText2 = select(".chamber-text-2");
+                if (chamberText2 && !prefersReducedMotion) {
+                    const textContent = chamberText2.innerText.trim();
+                    chamberText2.innerHTML = '';
+                    chamberText2.style.transformStyle = 'preserve-3d';
+
+                    // Base Text: Menjaga stabilitas layout dan keterbacaan solid 100% sebelum retak.
+                    const baseText = document.createElement('span');
+                    baseText.innerText = textContent;
+                    baseText.className = "text-shard-base";
+                    baseText.style.display = "block";
+                    baseText.style.width = "100%";
+                    baseText.style.position = "relative"; // CRITICAL: Menahan dimensi container H2 agar tidak collapse.
+                    baseText.style.opacity = 1;
+                    chamberText2.appendChild(baseText);
+
+                    // Grid Creation (8x4) dengan internal jitter
+                    const cols = 8;
+                    const rows = 4;
+                    const vertices = [];
+
+                    for (let i = 0; i <= cols; i++) {
+                        vertices[i] = [];
+                        for (let j = 0; j <= rows; j++) {
+                            let x = (i / cols) * 100;
+                            let y = (j / rows) * 100;
+                            if (i > 0 && i < cols && j > 0 && j < rows) {
+                                x += (Math.random() - 0.5) * (100 / cols) * 0.9;
+                                y += (Math.random() - 0.5) * (100 / rows) * 0.9;
+                            }
+                            vertices[i][j] = { x, y };
+                        }
+                    }
+
+                    // Pembuatan Shard Element (32 Fragmen)
+                    for (let i = 0; i < cols; i++) {
+                        for (let j = 0; j < rows; j++) {
+                            const p1 = vertices[i][j];
+                            const p2 = vertices[i + 1][j];
+                            const p3 = vertices[i + 1][j + 1];
+                            const p4 = vertices[i][j + 1];
+
+                            const polygon = `polygon(${p1.x}% ${p1.y}%, ${p2.x}% ${p2.y}%, ${p3.x}% ${p3.y}%, ${p4.x}% ${p4.y}%)`;
+
+                            const shard = document.createElement('span');
+                            shard.innerText = textContent;
+                            shard.className = "text-shard will-change-transform";
+                            
+                            shard.style.position = "absolute";
+                            shard.style.top = "0";
+                            shard.style.left = "0";
+                            shard.style.width = "100%";
+                            shard.style.height = "100%";
+                            shard.style.display = "block";
+                            shard.style.clipPath = polygon;
+                            shard.style.webkitClipPath = polygon; 
+                            shard.style.opacity = 1;
+
+                            const centerX = (p1.x + p2.x + p3.x + p4.x) / 4;
+                            const centerY = (p1.y + p2.y + p3.y + p4.y) / 4;
+                            shard.style.transformOrigin = `${centerX}% ${centerY}%`;
+
+                            shard.dataset.dirX = (centerX - 50) / 50; 
+                            shard.dataset.dirY = (centerY - 50) / 50; 
+                            shard.dataset.rand1 = Math.random();
+                            shard.dataset.rand2 = Math.random();
+                            shard.dataset.rand3 = Math.random();
+
+                            chamberText2.appendChild(shard);
+                        }
+                    }
+                }
+
+                // Sistem Timeline Utama Chamber (Scroll-Linked)
+                const tlChamber = gsap.timeline({ 
+                    scrollTrigger: { 
+                        trigger: "#chamber", 
+                        start: "top top", 
+                        end: "bottom bottom", 
+                        scrub: 1, 
+                        invalidateOnRefresh: true 
+                    } 
+                });
+                
+                // MENGGUNAKAN FROM-TO PADA SEMUA FASE TIMELINE
+                // Ini mencegah bug live-value caching dari GSAP invalidateOnRefresh saat resizing window.
+                tlChamber.fromTo(".lock-h-1, .lock-h-2", { scaleX: 0 }, { scaleX: 1, duration: 1, ease: "power2.out" }, 0)
+                         .fromTo(".lock-v-1, .lock-v-2", { scaleY: 0 }, { scaleY: 1, duration: 1, ease: "power2.out" }, 0.4)
+                         .fromTo(".lock-tick", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, 1.0);
+
+                // PHASE 1: INTRO (KEPERCAYAAN)
+                tlChamber.fromTo(".chamber-text-1", 
+                            { autoAlpha: 0, scale: 0.9 }, 
+                            { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 1.5)
+                // PHASE 2: HOLD & EXIT (KEPERCAYAAN)
+                         .fromTo(".chamber-text-1",
+                            { scale: 1 },
+                            { scale: 1.02, duration: 1.5, ease: "none" }, 3.0)
+                         .fromTo(".chamber-text-1", 
+                            { autoAlpha: 1, scale: 1.02 },
+                            { autoAlpha: 0, scale: 0.95, duration: 1.2, ease: "power2.inOut" }, 4.5)
+                         .fromTo(".lock-container", 
+                            { autoAlpha: 1, scale: 1 },
+                            { autoAlpha: 0, scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 4.5);
+
+                // PHASE 3: GAP (Jeda waktu absolut dari 5.7 hingga 6.5)
+
+                // PHASE 4: REVEAL (IA DIBANGUN.)
+                tlChamber.fromTo(".chamber-text-2", 
+                            { autoAlpha: 0, scale: 0.8 }, 
+                            { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 6.5)
+                // PHASE 5: HOLD (IA DIBANGUN.) - Memberi ruang stabil untuk dibaca
+                         .fromTo(".chamber-text-2", 
+                            { scale: 1 },
+                            { scale: 1.05, duration: 2.5, ease: "none" }, 8.0);
+
+                // PHASE 6: EXIT FRACTURE (IA DIBANGUN.)
+                if (!prefersReducedMotion) {
+                    const shards = gsap.utils.toArray(".text-shard");
+                    if (shards.length > 0) {
+                        const fractureTl = gsap.timeline();
+
+                        // Fade-out text-base diletakkan di dalam fromTo untuk reversibility sempurna
+                        fractureTl.fromTo(".text-shard-base", { opacity: 1 }, { opacity: 0, duration: 0.05 }, 0);
+
+                        // PHASE 6.1 — INTACT JITTER
+                        fractureTl.fromTo(shards, 
+                            { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scale: 1, opacity: 1 },
+                            {
+                                x: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 2,
+                                y: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 2,
+                                rotationZ: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 1,
+                                duration: 1.5,
+                                ease: "sine.inOut"
+                            }, 0);
+
+                        // PHASE 6.2 — TENSION
+                        fractureTl.to(shards, {
+                            x: (i, el) => parseFloat(el.dataset.dirX) * 12 + (parseFloat(el.dataset.rand1) - 0.5) * 8,
+                            y: (i, el) => parseFloat(el.dataset.dirY) * 12 + (parseFloat(el.dataset.rand2) - 0.5) * 8,
+                            z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 30,
+                            rotationZ: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 3,
+                            scale: (i, el) => 1 + (parseFloat(el.dataset.rand1) - 0.5) * 0.08,
+                            duration: 2.0,
+                            ease: "power1.inOut"
+                        }, 1.5);
+
+                        // PHASE 6.3 — FRACTURE
+                        fractureTl.to(shards, {
+                            x: (i, el) => parseFloat(el.dataset.dirX) * 45 + (parseFloat(el.dataset.rand1) - 0.5) * 35,
+                            y: (i, el) => parseFloat(el.dataset.dirY) * 45 + (parseFloat(el.dataset.rand2) - 0.5) * 35,
+                            z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 120,
+                            rotationX: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 25,
+                            rotationY: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 25,
+                            rotationZ: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 20,
+                            scale: (i, el) => 1 + (parseFloat(el.dataset.rand2) - 0.5) * 0.15,
+                            duration: 2.5,
+                            ease: "power2.inOut"
+                        }, 3.5);
+
+                        // PHASE 6.4 — DISPERSION
+                        fractureTl.to(shards, {
+                            x: (i, el) => parseFloat(el.dataset.dirX) * (window.innerWidth * 0.18) + (parseFloat(el.dataset.rand1) - 0.5) * 100,
+                            y: (i, el) => parseFloat(el.dataset.dirY) * (window.innerHeight * 0.22) + (parseFloat(el.dataset.rand2) - 0.5) * 100,
+                            z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 300,
+                            rotationX: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 60,
+                            rotationY: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 60,
+                            rotationZ: (i, el) => parseFloat(el.dataset.dirX) * 75 + (parseFloat(el.dataset.rand3) - 0.5) * 50,
+                            scale: (i, el) => 0.6 + parseFloat(el.dataset.rand1) * 0.5,
+                            opacity: (i, el) => 0.85 - parseFloat(el.dataset.rand2) * 0.2,
+                            duration: 3.0,
+                            ease: "power2.inOut"
+                        }, 6.0);
+
+                        // PHASE 6.5 — DISSOLUTION
+                        fractureTl.to(shards, {
+                            x: (i, el) => parseFloat(el.dataset.dirX) * (window.innerWidth * 0.35) + (parseFloat(el.dataset.rand1) - 0.5) * 180,
+                            y: (i, el) => parseFloat(el.dataset.dirY) * (window.innerHeight * 0.45) + (parseFloat(el.dataset.rand2) - 0.5) * 180,
+                            z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 500 - 150,
+                            rotationX: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 120,
+                            rotationY: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 120,
+                            rotationZ: (i, el) => parseFloat(el.dataset.dirX) * 130 + (parseFloat(el.dataset.rand3) - 0.5) * 130,
+                            scale: 0,
+                            opacity: 0,
+                            duration: 2.5,
+                            ease: "power3.in"
+                        }, 9.0);
+
+                        // Gabungkan ke master timeline pada posisi 10.5 (Tepat saat fase HOLD teks selesai)
+                        tlChamber.add(fractureTl, 10.5);
+                    }
+                }
+            }
+
+
+            // --- 06. SIGNATURE ---
+            if (select('#signature')) {
+                const tlSig = gsap.timeline({ scrollTrigger: { trigger: "#signature", start: "top top", end: "bottom bottom", scrub: 1.5 } });
+                tlSig.to(".sig-meta", { opacity: 1, duration: 1 }, 0) 
+                     .to(".axis-h", { strokeDashoffset: 0, duration: 2, stagger: 0.5, ease: "power2.inOut" }, 0.5)
+                     .to(".axis-v", { strokeDashoffset: 0, duration: 2, stagger: 0.5, ease: "power2.inOut" }, 1.5)
+                     .to(".axis-h-dash", { opacity: 0.2, duration: 1 }, 2.5)
+                     .to(".svg-meta, .svg-tick", { opacity: 1, duration: 1 }, 3)
+                     .to(".mm-outer", { strokeDashoffset: 0, duration: 2, stagger: 0.2, ease: "power2.inOut" }, 4.5)
+                     .to(".mm-center", { strokeDashoffset: 0, duration: 1.5, ease: "power2.inOut" }, 5.5)
+                     .to(".mm-diag-1", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 6.5)
+                     .to(".mm-diag-2", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 7)
+                     .to(".mm-diag-4", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 8)
+                     .to(".mm-diag-3", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 8.5)
+                     .to(".mm-line", { opacity: 0.8, duration: 0.5 }, 10)
+                     .to(".mm-line", { strokeWidth: 16, opacity: 1, duration: 0.5, ease: "power2.out" }, 10.5)
+                     .to(".mm-line", { strokeWidth: 10, duration: 0.5, ease: "power2.in" }, 11.0)
+                     .to(".sig-statement-line", { width: "100px", duration: 1.5, ease: "power2.inOut" }, 11.0)
+                     .to(".sig-statement", { opacity: 1, y: 0, duration: 1.5 }, 11.5);
+            }
+
+
+            // --- 07. FIRM ---
+            if (select('#firm')) {
+                gsap.set("#firm .firm-line", { yPercent: 115 });
+                gsap.set("#firm .firm-divider", { scaleY: 0 });
+                gsap.set("#firm .firm-copy", { y: 32, opacity: 0 }); 
+
+                gsap.to("#ghost-text", { scrollTrigger: { trigger: "#firm", start: "top bottom", end: "bottom top", scrub: true }, x: "-10vw", y: "5vw", scale: 1.05, ease: "none" });
+                
+                const firmTl = gsap.timeline({ scrollTrigger: { trigger: "#firm", start: "top 60%", end: "top 20%", scrub: false } });
+                firmTl.to("#firm .firm-line", { yPercent: 0, duration: 1.2, stagger: 0.15, ease: "expo.out" })
+                      .to("#firm .firm-divider", { scaleY: 1, duration: 1, ease: "power2.out" }, "-=1")
+                      .to("#firm .firm-copy", { y: 0, opacity: 1, duration: 1 }, "-=0.8");
+                      
+                gsap.to("#firm-img", { scrollTrigger: { trigger: ".firm-image-wrap", start: "top bottom", end: "bottom top", scrub: true }, y: "15%", ease: "none" });
+            }
+
+
+            // --- 08. SECTION 02: LEGAL ORBITAL SYSTEM (SURGICAL FIX & COMPOSITION) ---
+            if (select('#practice') && !prefersReducedMotion) {
+                
+                const orbitData = [
+                    { id: 1, title: "HUKUM PIDANA", desc: "Pendampingan dan pembelaan dalam perkara pidana dengan strategi hukum yang terukur, presisi, dan berorientasi pada perlindungan hak.", cx: 500, cy: 500, rx: 220, ry: 140, phi: 15 * Math.PI / 180, baseSpeed: 0.0018, angle: 0, posObj: "#practice-pos-1", nodeObj: "#practice-node-1", connObj: "#practice-conn-1", trackObj: "#practice-track-1" },
+                    { id: 2, title: "HUKUM PERDATA", desc: "Penanganan sengketa hak, kontrak, wanprestasi, dan hubungan keperdataan melalui analisis struktur hukum dan strategi penyelesaian yang terukur.", cx: 490, cy: 510, rx: 320, ry: 210, phi: -12 * Math.PI / 180, baseSpeed: 0.0013, angle: Math.PI / 2, posObj: "#practice-pos-2", nodeObj: "#practice-node-2", connObj: "#practice-conn-2", trackObj: "#practice-track-2" },
+                    { id: 3, title: "HUKUM ISLAM", desc: "Pendampingan persoalan hukum yang berkaitan dengan prinsip, transaksi, dan hubungan keperdataan dalam perspektif hukum Islam secara presisi.", cx: 515, cy: 485, rx: 410, ry: 270, phi: 22 * Math.PI / 180, baseSpeed: 0.0009, angle: Math.PI, posObj: "#practice-pos-3", nodeObj: "#practice-node-3", connObj: "#practice-conn-3", trackObj: "#practice-track-3" },
+                    { id: 4, title: "HUKUM TATA USAHA NEGARA", desc: "Penanganan sengketa administrasi pemerintahan dengan pendekatan hukum yang sistematis dan berbasis argumentasi institusional.", cx: 495, cy: 515, rx: 490, ry: 330, phi: -25 * Math.PI / 180, baseSpeed: 0.0006, angle: (Math.PI * 3) / 2, posObj: "#practice-pos-4", nodeObj: "#practice-node-4", connObj: "#practice-conn-4", trackObj: "#practice-track-4" }
+                ];
+
+                let activeNodeId = null;
+                let scrollMomentum = 0;
+                
+                // 1. Strict Scroll Momentum Capture
+                lenis.on('scroll', (e) => {
+                    const rawVelocity = Math.abs(e.velocity || 0);
+                    scrollMomentum = Math.min(rawVelocity * 0.00015, 0.012); 
+                });
+
+                // 2. Core Ticker
+                gsap.ticker.add((time, deltaTime) => {
+                    const dt = deltaTime || 16.66;
+                    scrollMomentum += (0 - scrollMomentum) * (dt * 0.003); 
+                    const currentMultiplier = 1 + (scrollMomentum * 80);
+
+                    gsap.set(".practice-core", { rotation: "+=" + (0.05 * currentMultiplier), transformOrigin: "500px 500px" });
+                    gsap.set(".practice-ambient", { rotation: "-=" + (0.02 * currentMultiplier), transformOrigin: "500px 500px" });
+
+                    orbitData.forEach(data => {
+                        data.angle += data.baseSpeed * currentMultiplier;
+                        
+                        const cosA = Math.cos(data.angle);
+                        const sinA = Math.sin(data.angle);
+                        const cosPhi = Math.cos(data.phi);
+                        const sinPhi = Math.sin(data.phi);
+
+                        const x = data.cx + data.rx * cosA * cosPhi - data.ry * sinA * sinPhi;
+                        const y = data.cy + data.rx * cosA * sinPhi + data.ry * sinA * cosPhi;
+                        
+                        gsap.set(data.posObj, { x: x, y: y });
+                        
+                        if (data.id === activeNodeId) {
+                            gsap.set(data.connObj, { attr: { x1: 500, y1: 500, x2: x, y2: y } });
+                        }
+                    });
+                });
+
+                // 3. Editorial Content Transistion & System Manager
+                window.activateNode = function(id, immediate = false) {
+                    if (activeNodeId === id) return;
+                    activeNodeId = id;
+                    
+                    const dur = immediate ? 0 : 0.6;
+
+                    // KILL TWEENS
+                    gsap.killTweensOf([".practice-desc-anim", ".practice-title-anim", ".practice-core-pulse"]);
+
+                    gsap.fromTo(".practice-core-pulse", 
+                        { scale: 1.15 }, 
+                        { scale: 1, duration: Math.max(dur, 0.3), ease: "power2.out" }
+                    );
+
+                    orbitData.forEach(data => {
+                        const isActive = data.id === id;
+                        
+                        gsap.killTweensOf([data.nodeObj, data.nodeObj + " .practice-dot", data.nodeObj + " .practice-ring", data.trackObj, data.connObj]);
+                        
+                        if (isActive) {
+                            gsap.to(data.nodeObj, { scale: 1, duration: dur, ease: "power2.out" }); 
+                            gsap.to(data.nodeObj + " .practice-dot", { fill: "#D0E6FD", scale: 1.3, duration: dur, ease: "power2.out" });
+                            gsap.to(data.nodeObj + " .practice-ring", { stroke: "#D0E6FD", scale: 1.1, opacity: 1, duration: dur, ease: "power2.out" });
+                            gsap.to(data.trackObj, { strokeOpacity: 0.8, strokeWidth: 1, duration: dur });
+                            gsap.to(data.connObj, { opacity: 0.5, duration: dur });
+                        } else {
+                            gsap.to(data.nodeObj, { scale: 1, duration: dur, ease: "power2.out" });
+                            gsap.to(data.nodeObj + " .practice-dot", { fill: "#F1E4D1", scale: 1, duration: dur, ease: "power2.out" });
+                            gsap.to(data.nodeObj + " .practice-ring", { stroke: "#F1E4D1", scale: 1, opacity: 0.3, duration: dur, ease: "power2.out" });
+                            gsap.to(data.trackObj, { strokeOpacity: 0.15, strokeWidth: 0.5, duration: dur });
+                            gsap.to(data.connObj, { opacity: 0, duration: Math.max(dur, 0.2) });
+                        }
+                    });
+
+                    const activeData = orbitData.find(d => d.id === id);
+
+                    if (immediate) {
+                        select("#practice-panel-title").innerText = activeData.title;
+                        select("#practice-panel-desc").innerText = activeData.desc;
+                        select("#practice-panel-num").innerText = "0" + activeData.id;
+                        gsap.set(".practice-desc-anim", { y: 0, opacity: 1 });
+                        gsap.set(".practice-title-anim", { x: 0, opacity: 1 });
+                    } else {
+                        // Bespoke directional transition
+                        gsap.to(".practice-desc-anim", { y: -8, opacity: 0, duration: 0.3, ease: "power2.in" });
+                        gsap.to(".practice-title-anim", { x: -12, opacity: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
+                            select("#practice-panel-title").innerText = activeData.title;
+                            select("#practice-panel-desc").innerText = activeData.desc;
+                            select("#practice-panel-num").innerText = "0" + activeData.id;
+                            
+                            gsap.fromTo(".practice-desc-anim", 
+                                { y: 8, opacity: 0 }, 
+                                { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+                            );
+                            gsap.fromTo(".practice-title-anim", 
+                                { x: 12, opacity: 0 }, 
+                                { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+                            );
+                        }});
+                    }
+                };
+
+                // Initialize State
+                window.activateNode(1, true);
+
+                // Interaction Mapping
+                selectAll(".practice-node").forEach(node => {
+                    node.addEventListener('click', function() {
+                        window.activateNode(parseInt(this.getAttribute('data-id')));
+                    });
+                    
+                    node.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            window.activateNode(parseInt(this.getAttribute('data-id')));
+                        }
+                    });
+
+                    if (!isTouchDevice) {
+                        node.addEventListener('mouseenter', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            if (id !== activeNodeId) gsap.to(this.querySelector('.practice-ring'), { scale: 1.05, strokeOpacity: 0.7, duration: 0.3 });
+                        });
+                        node.addEventListener('mouseleave', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            if (id !== activeNodeId) gsap.to(this.querySelector('.practice-ring'), { scale: 1, strokeOpacity: 0.3, duration: 0.3 });
+                        });
+                    }
+                });
+
+                // 4. Safely Recoverable Visibility
+                const practiceElements = ["#practice-system-wrapper", ".practice-title-wrapper", ".practice-desc-wrapper"];
+                
+                gsap.fromTo(practiceElements, 
+                    { opacity: 0 }, 
+                    { opacity: 1, ease: "none", scrollTrigger: { trigger: "#practice", start: "top 75%", end: "top 25%", scrub: true, invalidateOnRefresh: true } }
+                );
+                
+                gsap.fromTo(practiceElements, 
+                    { opacity: 1 }, 
+                    { opacity: 0, ease: "none", scrollTrigger: { trigger: "#practice", start: "bottom 75%", end: "bottom 25%", scrub: true, invalidateOnRefresh: true } }
+                );
+
+                // 5. One-time Path Building Cinematic
+                const tlPracticeEntrance = gsap.timeline({
+                    scrollTrigger: { trigger: "#practice", start: "top 60%", once: true }
+                });
+
+                tlPracticeEntrance
+                    .to(".practice-label", { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" })
+                    .fromTo(".practice-core", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power3.out" }, "-=0.5")
+                    .to(".practice-path-1", { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut" }, "-=1")
+                    .to(".practice-path-2", { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut" }, "-=1.5")
+                    .to(".practice-path-3", { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut" }, "-=1.5")
+                    .to(".practice-path-4", { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut" }, "-=1.5")
+                    .fromTo(".practice-node", { scale: 0 }, { scale: 1, duration: 1, ease: "back.out(1.2)", stagger: 0.15 }, "-=1.5");
+
+                // Pointer Parallax 
+                if (!isTouchDevice) {
+                    const parallaxWrapper = select('#practice-system-wrapper');
+                    const tracksX = gsap.quickTo("#practice-tracks-parallax", "x", {duration: 0.6, ease: "power2.out"});
+                    const tracksY = gsap.quickTo("#practice-tracks-parallax", "y", {duration: 0.6, ease: "power2.out"});
+                    const coreX = gsap.quickTo("#practice-core-parallax", "x", {duration: 0.4, ease: "power2.out"});
+                    const coreY = gsap.quickTo("#practice-core-parallax", "y", {duration: 0.4, ease: "power2.out"});
+
+                    parallaxWrapper.addEventListener('mousemove', (e) => {
+                        const rect = parallaxWrapper.getBoundingClientRect();
+                        const xPos = ((e.clientX - rect.left) / rect.width) - 0.5;
+                        const yPos = ((e.clientY - rect.top) / rect.height) - 0.5;
+                        tracksX(xPos * 15); tracksY(yPos * 15);
+                        coreX(xPos * -10); coreY(yPos * -10);
+                    });
+
+                    parallaxWrapper.addEventListener('mouseleave', () => {
+                        tracksX(0); tracksY(0); coreX(0); coreY(0);
+                    });
+                }
+            }
+
+
+            // --- 09. PRINCIPLES ---
+            if (select('#principles')) {
+                const prinTl = gsap.timeline({ scrollTrigger: { trigger: "#principles", start: "top top", end: "bottom bottom", scrub: 1 } });
+                const blurFilter = prefersReducedMotion ? "blur(0px)" : "blur(8px)";
+                prinTl.to("#prin-1", { opacity: 0, scale: 0.9, filter: blurFilter, duration: 1 })
+                      .to("#prin-marker", { top: "33.33%", duration: 1, ease: "power1.inOut" }, "-=1")
+                      .to("#prin-2", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1 }, "-=0.5")
+                      .to("#prin-2", { opacity: 0, scale: 0.9, filter: blurFilter, duration: 1 }, "+=0.5")
+                      .to("#prin-marker", { top: "66.66%", duration: 1, ease: "power1.inOut" }, "-=1")
+                      .to("#prin-3", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1 }, "-=0.5");
+            }
+
+
+            // --- 10. PEOPLE ---
+            if (select('#people')) {
+                const peopleTl = gsap.timeline({ scrollTrigger: { trigger: "#people", start: "top 60%", end: "top 10%", scrub: false } });
+                peopleTl.to(".people-heading", { opacity: 1, y: 0, duration: 1, ease: "power2.out" })
+                        .to("#portrait-wrap", { clipPath: "inset(0% 0 0 0)", duration: 1.5, ease: "expo.inOut" }, "-=0.5")
+                        .to("#people-img", { filter: "grayscale(20%) contrast(1.1)", scale: 1.05, duration: 2, ease: "power2.out" }, "-=1.5")
+                        .to(".nameplate-meta", { y: "0%", duration: 0.8, ease: "expo.out" }, "-=1")
+                        .to(".nameplate-text", { y: "0%", duration: 1, stagger: 0.15, ease: "expo.out" }, "-=0.8")
+                        .to(".nameplate-details", { opacity: 1, duration: 1 }, "-=0.5");
+                gsap.to("#people-img", { scrollTrigger: { trigger: "#portrait-wrap", start: "top bottom", end: "bottom top", scrub: true }, y: "8%", ease: "none" });
+            }
+
+
+            // --- 11. CONTACT ---
+            if (select('#contact')) {
+                gsap.to("#cta-line-t, #cta-line-b", { scaleX: 1, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: "#contact", start: "top 70%", toggleActions: "play none none reverse" } });
+            }
+
+
+            // --- 12. FOOTER ---
+            if (select('footer')) {
+                const footerTl = gsap.timeline({ scrollTrigger: { trigger: "footer", start: "top 80%", end: "bottom bottom", scrub: false } });
+                footerTl.fromTo(".footer-logo", { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power3.out" })
+                        .to(".footer-tagline", { y: "0%", duration: 1, ease: "expo.out" }, "-=0.8");
+            }
+
+
+            // --- 13. UTILITY ---
+            selectAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const targetEl = select(targetId);
+                    if (targetEl) lenis.scrollTo(targetEl, { offset: 0, duration: 2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+                });
+            });
+
+            // --- 14. RESIZE ---
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); }, 250);
+            });
+            setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+            
+            // --- 15. FONT LOADING SAFETY ---
+            if (document.fonts) {
+                document.fonts.ready.then(() => {
+                    ScrollTrigger.refresh(); 
+                });
+            }
+        });
+    </script>
+</body>
+</html>
