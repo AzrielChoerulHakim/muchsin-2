@@ -794,37 +794,30 @@
 
             // --- 05. CHAMBER: THE STRUCTURAL NARRATIVE ---
             if (select('#chamber')) {
-                // FIXED: Clear properties to prevent layout conflicts, positioning anchored rigidly by HTML wrapper.
-                gsap.set(".chamber-text-1", { clearProps: "all" });
-                gsap.set(".chamber-text-2", { clearProps: "all" });
-
-                // STRICT initial scale & origin locking Tanpa xPercent/yPercent.
-                gsap.set(".chamber-text-1", { autoAlpha: 0, scale: 0.9, transformOrigin: "50% 50%" });
-                gsap.set(".chamber-text-2", { autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%" });
-                
+                // CLEAR DAN SET INITIAL STATE DENGAN KERAS (Di luar timeline)
+                gsap.set(".chamber-text-1", { opacity: 0, visibility: "hidden", scale: 0.9, transformOrigin: "50% 50%" });
+                gsap.set(".chamber-text-2", { opacity: 0, visibility: "hidden", scale: 0.8, transformOrigin: "50% 50%" });
                 gsap.set(".lock-container", { autoAlpha: 1 });
                 gsap.set(".lock-h-1, .lock-h-2", { scaleX: 0 });
                 gsap.set(".lock-v-1, .lock-v-2", { scaleY: 0 });
                 gsap.set(".lock-tick", { autoAlpha: 0 });
 
-                // [NEW] GEOMETRIC FRACTURE GENERATOR (One-time setup)
+                // GEOMETRIC FRACTURE GENERATOR
                 const chamberText2 = select(".chamber-text-2");
                 if (chamberText2 && !prefersReducedMotion) {
                     const textContent = chamberText2.innerText.trim();
                     chamberText2.innerHTML = '';
                     chamberText2.style.transformStyle = 'preserve-3d';
 
-                    // Base Text: Menjaga stabilitas layout dan keterbacaan solid 100% sebelum retak.
                     const baseText = document.createElement('span');
                     baseText.innerText = textContent;
                     baseText.className = "text-shard-base";
                     baseText.style.display = "block";
                     baseText.style.width = "100%";
-                    baseText.style.position = "relative"; // CRITICAL: Menahan dimensi container H2 agar tidak collapse.
+                    baseText.style.position = "relative";
                     baseText.style.opacity = 1;
                     chamberText2.appendChild(baseText);
 
-                    // Grid Creation (8x4) dengan internal jitter
                     const cols = 8;
                     const rows = 4;
                     const vertices = [];
@@ -842,7 +835,6 @@
                         }
                     }
 
-                    // Pembuatan Shard Element (32 Fragmen)
                     for (let i = 0; i < cols; i++) {
                         for (let j = 0; j < rows; j++) {
                             const p1 = vertices[i][j];
@@ -881,64 +873,59 @@
                     }
                 }
 
-                // Sistem Timeline Utama Chamber (Scroll-Linked)
+                /* 
+                 CRITICAL FIX: 
+                 1. Menghapus invalidateOnRefresh: true agar nilai animasi tidak direkam ulang saat URL bar mobile menghilang/resize.
+                 2. Menggunakan eksplisit .to() secara mutlak (karena nilai awalnya sudah diset di atas).
+                */
                 const tlChamber = gsap.timeline({ 
                     scrollTrigger: { 
                         trigger: "#chamber", 
                         start: "top top", 
                         end: "bottom bottom", 
-                        scrub: 1, 
-                        invalidateOnRefresh: true 
+                        scrub: 1
                     } 
                 });
                 
-                // MENGGUNAKAN FROM-TO PADA SEMUA FASE TIMELINE
-                // Ini mencegah bug live-value caching dari GSAP invalidateOnRefresh saat resizing window.
-                tlChamber.fromTo(".lock-h-1, .lock-h-2", { scaleX: 0 }, { scaleX: 1, duration: 1, ease: "power2.out" }, 0)
-                         .fromTo(".lock-v-1, .lock-v-2", { scaleY: 0 }, { scaleY: 1, duration: 1, ease: "power2.out" }, 0.4)
-                         .fromTo(".lock-tick", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, 1.0);
+                tlChamber
+                    // PHASE 0.0 - 1.0: Grid lines X
+                    .to(".lock-h-1, .lock-h-2", { scaleX: 1, duration: 1, ease: "power2.out" }, 0)
+                    // PHASE 0.4 - 1.4: Grid lines Y
+                    .to(".lock-v-1, .lock-v-2", { scaleY: 1, duration: 1, ease: "power2.out" }, 0.4)
+                    // PHASE 1.0 - 1.5: Ticks
+                    .to(".lock-tick", { autoAlpha: 1, duration: 0.5 }, 1.0)
+                    
+                    // PHASE 1.5 - 3.0: INTRO "KEPERCAYAAN..."
+                    .to(".chamber-text-1", { opacity: 1, visibility: "visible", scale: 1, duration: 1.5, ease: "power2.out" }, 1.5)
+                    // PHASE 3.0 - 4.5: HOLD "KEPERCAYAAN..."
+                    .to(".chamber-text-1", { scale: 1.02, duration: 1.5, ease: "none" }, 3.0)
+                    // PHASE 4.5 - 5.7: EXIT "KEPERCAYAAN..."
+                    .to(".chamber-text-1", { opacity: 0, visibility: "hidden", scale: 0.95, duration: 1.2, ease: "power2.inOut" }, 4.5)
+                    .to(".lock-container", { autoAlpha: 0, scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 4.5)
+                    
+                    // PHASE 5.7 - 6.5: GAP (0.8s)
 
-                // PHASE 1: INTRO (KEPERCAYAAN)
-                tlChamber.fromTo(".chamber-text-1", 
-                            { autoAlpha: 0, scale: 0.9 }, 
-                            { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 1.5)
-                // PHASE 2: HOLD & EXIT (KEPERCAYAAN)
-                         .fromTo(".chamber-text-1",
-                            { scale: 1 },
-                            { scale: 1.02, duration: 1.5, ease: "none" }, 3.0)
-                         .fromTo(".chamber-text-1", 
-                            { autoAlpha: 1, scale: 1.02 },
-                            { autoAlpha: 0, scale: 0.95, duration: 1.2, ease: "power2.inOut" }, 4.5)
-                         .fromTo(".lock-container", 
-                            { autoAlpha: 1, scale: 1 },
-                            { autoAlpha: 0, scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 4.5);
+                    // PHASE 6.5 - 8.0: REVEAL "IA DIBANGUN."
+                    .to(".chamber-text-2", { opacity: 1, visibility: "visible", scale: 1, duration: 1.5, ease: "power2.out" }, 6.5)
+                    // PHASE 8.0 - 10.5: HOLD "IA DIBANGUN." (Terbaca penuh dan diam)
+                    .to(".chamber-text-2", { scale: 1.05, duration: 2.5, ease: "none" }, 8.0);
 
-                // PHASE 3: GAP (Jeda waktu absolut dari 5.7 hingga 6.5)
-
-                // PHASE 4: REVEAL (IA DIBANGUN.)
-                tlChamber.fromTo(".chamber-text-2", 
-                            { autoAlpha: 0, scale: 0.8 }, 
-                            { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 6.5)
-                // PHASE 5: HOLD (IA DIBANGUN.) - Memberi ruang stabil untuk dibaca
-                         .fromTo(".chamber-text-2", 
-                            { scale: 1 },
-                            { scale: 1.05, duration: 2.5, ease: "none" }, 8.0);
-
-                // PHASE 6: EXIT FRACTURE (IA DIBANGUN.)
+                // FRACTURE TIMELINE
                 if (!prefersReducedMotion) {
                     const shards = gsap.utils.toArray(".text-shard");
                     if (shards.length > 0) {
                         const fractureTl = gsap.timeline();
 
-                        // Fade-out text-base diletakkan di dalam fromTo untuk reversibility sempurna
-                        fractureTl.fromTo(".text-shard-base", { opacity: 1 }, { opacity: 0, duration: 0.05 }, 0);
+                        // Menghapus base text
+                        fractureTl.to(".text-shard-base", { opacity: 0, duration: 0.05 }, 0);
 
+                        // MENGGUNAKAN VW/VH CSS UNTUK RESPONSIVITAS NATIVE (Tanpa window.innerWidth recalculation)
                         // PHASE 6.1 — INTACT JITTER
                         fractureTl.fromTo(shards, 
-                            { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scale: 1, opacity: 1 },
+                            { x: "0vw", y: "0vh", z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scale: 1, opacity: 1 },
                             {
-                                x: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 2,
-                                y: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 2,
+                                x: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 0.2 + "vw",
+                                y: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 0.2 + "vh",
                                 rotationZ: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 1,
                                 duration: 1.5,
                                 ease: "sine.inOut"
@@ -946,8 +933,8 @@
 
                         // PHASE 6.2 — TENSION
                         fractureTl.to(shards, {
-                            x: (i, el) => parseFloat(el.dataset.dirX) * 12 + (parseFloat(el.dataset.rand1) - 0.5) * 8,
-                            y: (i, el) => parseFloat(el.dataset.dirY) * 12 + (parseFloat(el.dataset.rand2) - 0.5) * 8,
+                            x: (i, el) => (parseFloat(el.dataset.dirX) * 1.5 + (parseFloat(el.dataset.rand1) - 0.5) * 1) + "vw",
+                            y: (i, el) => (parseFloat(el.dataset.dirY) * 1.5 + (parseFloat(el.dataset.rand2) - 0.5) * 1) + "vh",
                             z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 30,
                             rotationZ: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 3,
                             scale: (i, el) => 1 + (parseFloat(el.dataset.rand1) - 0.5) * 0.08,
@@ -957,8 +944,8 @@
 
                         // PHASE 6.3 — FRACTURE
                         fractureTl.to(shards, {
-                            x: (i, el) => parseFloat(el.dataset.dirX) * 45 + (parseFloat(el.dataset.rand1) - 0.5) * 35,
-                            y: (i, el) => parseFloat(el.dataset.dirY) * 45 + (parseFloat(el.dataset.rand2) - 0.5) * 35,
+                            x: (i, el) => (parseFloat(el.dataset.dirX) * 5 + (parseFloat(el.dataset.rand1) - 0.5) * 3) + "vw",
+                            y: (i, el) => (parseFloat(el.dataset.dirY) * 5 + (parseFloat(el.dataset.rand2) - 0.5) * 3) + "vh",
                             z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 120,
                             rotationX: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 25,
                             rotationY: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 25,
@@ -970,8 +957,8 @@
 
                         // PHASE 6.4 — DISPERSION
                         fractureTl.to(shards, {
-                            x: (i, el) => parseFloat(el.dataset.dirX) * (window.innerWidth * 0.18) + (parseFloat(el.dataset.rand1) - 0.5) * 100,
-                            y: (i, el) => parseFloat(el.dataset.dirY) * (window.innerHeight * 0.22) + (parseFloat(el.dataset.rand2) - 0.5) * 100,
+                            x: (i, el) => (parseFloat(el.dataset.dirX) * 18 + (parseFloat(el.dataset.rand1) - 0.5) * 10) + "vw",
+                            y: (i, el) => (parseFloat(el.dataset.dirY) * 22 + (parseFloat(el.dataset.rand2) - 0.5) * 10) + "vh",
                             z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 300,
                             rotationX: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 60,
                             rotationY: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 60,
@@ -984,8 +971,8 @@
 
                         // PHASE 6.5 — DISSOLUTION
                         fractureTl.to(shards, {
-                            x: (i, el) => parseFloat(el.dataset.dirX) * (window.innerWidth * 0.35) + (parseFloat(el.dataset.rand1) - 0.5) * 180,
-                            y: (i, el) => parseFloat(el.dataset.dirY) * (window.innerHeight * 0.45) + (parseFloat(el.dataset.rand2) - 0.5) * 180,
+                            x: (i, el) => (parseFloat(el.dataset.dirX) * 35 + (parseFloat(el.dataset.rand1) - 0.5) * 18) + "vw",
+                            y: (i, el) => (parseFloat(el.dataset.dirY) * 45 + (parseFloat(el.dataset.rand2) - 0.5) * 18) + "vh",
                             z: (i, el) => (parseFloat(el.dataset.rand3) - 0.5) * 500 - 150,
                             rotationX: (i, el) => (parseFloat(el.dataset.rand1) - 0.5) * 120,
                             rotationY: (i, el) => (parseFloat(el.dataset.rand2) - 0.5) * 120,
@@ -996,7 +983,7 @@
                             ease: "power3.in"
                         }, 9.0);
 
-                        // Gabungkan ke master timeline pada posisi 10.5 (Tepat saat fase HOLD teks selesai)
+                        // Gabungkan ke master timeline TEPAT SETELAH fase "HOLD" selesai.
                         tlChamber.add(fractureTl, 10.5);
                     }
                 }
