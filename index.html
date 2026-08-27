@@ -205,14 +205,17 @@
 
         /* LEGAL ORBITAL SYSTEM - SCOPED STYLES (SECTION 02) */
         .practice-node { cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none; }
-        /* Layer separation for position vs scale */
-        .practice-node-pos { will-change: transform; } 
-        .practice-node-touch { pointer-events: bounding-box; fill: transparent; }
+        
+        /* Modifikasi untuk depth dan hit-area */
+        .practice-node-pos { will-change: transform, opacity; transform-origin: center center; } 
+        .practice-node-touch { pointer-events: all; fill: transparent; }
+        
         .practice-node:focus-visible .practice-ring { stroke: #D0E6FD; stroke-width: 1.5; opacity: 1; }
         
         /* New Animation Classes for Composition */
         .practice-desc-anim { will-change: transform, opacity; }
         .practice-title-anim { will-change: transform, opacity; }
+        .node-micro-label { will-change: transform, opacity; pointer-events: none; }
 
         .practice-path { stroke-dasharray: 3000; stroke-dashoffset: 3000; will-change: stroke-dashoffset, stroke-opacity, stroke-width; transition: stroke-opacity 0.6s ease, stroke-width 0.6s ease; }
         .practice-core, .practice-dot, .practice-ring, .practice-conn { will-change: transform, opacity, stroke, fill; }
@@ -452,7 +455,7 @@
                 </div>
             </section>
 
-            <!-- 05 - PRACTICE (LEGAL ORBITAL SYSTEM - RECOMPOSED) -->
+            <!-- 05 - PRACTICE (LEGAL ORBITAL SYSTEM - RECOMPOSED & FIXED) -->
             <section id="practice" class="relative h-[100svh] min-h-[650px] pt-24 pb-8 md:pt-28 md:pb-12 bg-navy text-bone overflow-hidden z-20 flex flex-col justify-between">
                 
                 <!-- Background Ambient Gradient / Lines (Subtle) -->
@@ -513,9 +516,11 @@
                                     </g>
                                     
                                     <!-- NODES -->
+                                    <!-- Enlarged transparent hit-area r="60" and explicitly added micro-labels -->
                                     <g class="practice-node-pos" id="practice-pos-1">
                                         <g class="practice-node" id="practice-node-1" data-id="1" role="button" tabindex="0" aria-label="Pilih Hukum Pidana">
-                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <circle cx="0" cy="0" r="60" class="practice-node-touch" />
+                                            <text class="node-micro-label" x="0" y="-30" text-anchor="middle" fill="#F1E4D1" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="2" opacity="0">BUKA</text>
                                             <rect x="-4" y="-4" width="8" height="8" fill="#F1E4D1" class="practice-dot" transform="rotate(45)" />
                                             <circle cx="0" cy="0" r="14" fill="none" stroke="#F1E4D1" stroke-width="0.75" class="practice-ring" stroke-opacity="0.3" />
                                             <circle cx="0" cy="0" r="18" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-dasharray="2 3" class="practice-ring" stroke-opacity="0.15" />
@@ -524,7 +529,8 @@
 
                                     <g class="practice-node-pos" id="practice-pos-2">
                                         <g class="practice-node" id="practice-node-2" data-id="2" role="button" tabindex="0" aria-label="Pilih Hukum Perdata">
-                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <circle cx="0" cy="0" r="60" class="practice-node-touch" />
+                                            <text class="node-micro-label" x="0" y="-32" text-anchor="middle" fill="#F1E4D1" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="2" opacity="0">BUKA</text>
                                             <rect x="-3" y="-3" width="6" height="6" fill="#F1E4D1" class="practice-dot" />
                                             <circle cx="0" cy="0" r="16" fill="none" stroke="#F1E4D1" stroke-width="0.5" class="practice-ring" stroke-opacity="0.3" />
                                             <path d="M 0 -22 L 0 22 M -22 0 L 22 0" stroke="#F1E4D1" stroke-width="0.5" stroke-opacity="0.2" class="practice-ring" />
@@ -534,7 +540,8 @@
 
                                     <g class="practice-node-pos" id="practice-pos-3">
                                         <g class="practice-node" id="practice-node-3" data-id="3" role="button" tabindex="0" aria-label="Pilih Hukum Islam">
-                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <circle cx="0" cy="0" r="60" class="practice-node-touch" />
+                                            <text class="node-micro-label" x="0" y="-30" text-anchor="middle" fill="#F1E4D1" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="2" opacity="0">BUKA</text>
                                             <circle cx="0" cy="0" r="3" fill="#F1E4D1" class="practice-dot" />
                                             <circle cx="0" cy="0" r="14" fill="none" stroke="#F1E4D1" stroke-width="0.25" class="practice-ring" stroke-opacity="0.2" />
                                             <polygon points="0,-16 11,-11 16,0 11,11 0,16 -11,11 -16,0 -11,-11" fill="none" stroke="#F1E4D1" stroke-width="0.5" stroke-dasharray="2 2" class="practice-ring" stroke-opacity="0.4" />
@@ -544,7 +551,8 @@
 
                                     <g class="practice-node-pos" id="practice-pos-4">
                                         <g class="practice-node" id="practice-node-4" data-id="4" role="button" tabindex="0" aria-label="Pilih Hukum Tata Usaha Negara">
-                                            <circle cx="0" cy="0" r="44" class="practice-node-touch" />
+                                            <circle cx="0" cy="0" r="60" class="practice-node-touch" />
+                                            <text class="node-micro-label" x="0" y="-34" text-anchor="middle" fill="#F1E4D1" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="2" opacity="0">BUKA</text>
                                             <path d="M -4 0 L 4 0 M 0 -4 L 0 4" stroke="#F1E4D1" stroke-width="1" class="practice-dot" />
                                             <circle cx="0" cy="0" r="12" fill="none" stroke="#F1E4D1" stroke-width="0.5" class="practice-ring" stroke-opacity="0.3" />
                                             <circle cx="0" cy="0" r="20" fill="none" stroke="#F1E4D1" stroke-width="0.25" class="practice-ring" stroke-opacity="0.2" />
@@ -817,27 +825,19 @@
             // --- 05. CHAMBER: THE STRUCTURAL NARRATIVE ---
             if (select('#chamber')) {
                 
-                // CLEAR DAN SET INITIAL STATE DENGAN KERAS (Di luar timeline)
                 gsap.set(".chamber-text-1", { opacity: 0, visibility: "hidden", scale: 0.9, transformOrigin: "50% 50%" });
                 gsap.set(".lock-container", { autoAlpha: 1 });
                 gsap.set(".lock-h-1, .lock-h-2", { scaleX: 0 });
                 gsap.set(".lock-v-1, .lock-v-2", { scaleY: 0 });
                 gsap.set(".lock-tick", { autoAlpha: 0 });
 
-                // --- NEW: STRUCTURAL REVEAL SETUP ---
-                // Teks "IA DIBANGUN." secara bawaan CSS adalah visible (Fail-safe).
-                // GSAP menutupnya di awal agar bisa di-'reveal' berdasarkan scroll.
                 gsap.set(".struct-line-v", { scaleY: 0, transformOrigin: "50% 50%" });
                 gsap.set(".struct-line-h", { scaleX: 0, transformOrigin: "50% 50%" });
                 gsap.set(".struct-border-t, .struct-border-b", { scaleX: 0, transformOrigin: "50% 50%" });
                 
-                // Jendela penutup (clip-path horizontal dari tengah). 
                 gsap.set(".struct-reveal-window", { clipPath: "inset(0% 50% 0% 50%)" });
-                
-                // Pergeseran ruang / lift tipis untuk memberikan efek berat. Tidak ada animasi scale zoom.
                 gsap.set(".chamber-text-2", { y: "24px" }); 
                 
-
                 const tlChamber = gsap.timeline({ 
                     scrollTrigger: { 
                         trigger: "#chamber", 
@@ -848,41 +848,20 @@
                 });
                 
                 tlChamber
-                    // PHASE 0.0 - 1.0: Grid lines X
                     .to(".lock-h-1, .lock-h-2", { scaleX: 1, duration: 1, ease: "power2.out" }, 0)
-                    // PHASE 0.4 - 1.4: Grid lines Y
                     .to(".lock-v-1, .lock-v-2", { scaleY: 1, duration: 1, ease: "power2.out" }, 0.4)
-                    // PHASE 1.0 - 1.5: Ticks
                     .to(".lock-tick", { autoAlpha: 1, duration: 0.5 }, 1.0)
-                    
-                    // PHASE 1.5 - 3.0: INTRO "KEPERCAYAAN..."
                     .to(".chamber-text-1", { opacity: 1, visibility: "visible", scale: 1, duration: 1.5, ease: "power2.out" }, 1.5)
-                    // PHASE 3.0 - 4.5: HOLD "KEPERCAYAAN..."
                     .to(".chamber-text-1", { scale: 1.02, duration: 1.5, ease: "none" }, 3.0)
-                    // PHASE 4.5 - 5.7: EXIT "KEPERCAYAAN..."
                     .to(".chamber-text-1", { opacity: 0, visibility: "hidden", scale: 0.95, duration: 1.2, ease: "power2.inOut" }, 4.5)
                     .to(".lock-container", { autoAlpha: 0, scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 4.5)
-                    
-                    // --- NEW: STRUCTURAL REVEAL SEQUENCE ---
-                    
-                    // PHASE 6.0 - 7.5: STRUCTURAL GUIDES (Muncul sebagai poros penanda)
                     .to(".struct-line-v", { scaleY: 1, duration: 1.5, ease: "power3.inOut" }, 6.0)
                     .to(".struct-line-h", { scaleX: 1, duration: 1.5, ease: "power3.inOut" }, 6.2)
-                    
-                    // PHASE 7.0 - 8.2: INDEPENDENT BORDERS DRAW
-                    // Border atas & bawah merambat ke samping, memotong frame
                     .to(".struct-border-t, .struct-border-b", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, 7.0)
-                    
-                    // PHASE 7.6 - 9.1: WINDOW REVEAL & TEXT SETTLEMENT
-                    // Clip-path horizontal membuka sinkron dengan teks yang bergeser menemukan posisinya
                     .to(".struct-reveal-window", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "power2.inOut" }, 7.6)
                     .to(".chamber-text-2", { y: "0px", duration: 1.5, ease: "power2.out" }, 7.8)
-                    
-                    // PHASE 9.1 - 11.5: ARCHITECTURAL HOLD & BREATHE
-                    // Teks IA DIBANGUN sepenuhnya diam stabil. Guide lines memuai perlahan untuk indikasi nyawa.
                     .to(".struct-line-v", { scaleY: 1.1, duration: 2.4, ease: "none" }, 9.1)
                     .to(".struct-line-h", { scaleX: 1.1, duration: 2.4, ease: "none" }, 9.1);
-
             }
 
 
@@ -936,7 +915,9 @@
                 ];
 
                 let activeNodeId = null;
+                let hoveredNodeId = null;
                 let scrollMomentum = 0;
+                let currentSpeedMult = 1;
                 
                 // 1. Strict Scroll Momentum Capture
                 lenis.on('scroll', (e) => {
@@ -944,17 +925,24 @@
                     scrollMomentum = Math.min(rawVelocity * 0.00015, 0.012); 
                 });
 
-                // 2. Core Ticker
+                // 2. Core Ticker (Controlled Organic Motion with Z-Depth mapping)
                 gsap.ticker.add((time, deltaTime) => {
                     const dt = deltaTime || 16.66;
                     scrollMomentum += (0 - scrollMomentum) * (dt * 0.003); 
-                    const currentMultiplier = 1 + (scrollMomentum * 80);
+                    
+                    let targetMult = 1 + (scrollMomentum * 80);
+                    if (hoveredNodeId !== null) {
+                        targetMult *= 0.3; // Gentle slowdown when hovered
+                    }
 
-                    gsap.set(".practice-core", { rotation: "+=" + (0.05 * currentMultiplier), transformOrigin: "500px 500px" });
-                    gsap.set(".practice-ambient", { rotation: "-=" + (0.02 * currentMultiplier), transformOrigin: "500px 500px" });
+                    // Smooth interpolation of speed
+                    currentSpeedMult += (targetMult - currentSpeedMult) * (dt * 0.005);
+
+                    gsap.set(".practice-core", { rotation: "+=" + (0.05 * currentSpeedMult), transformOrigin: "500px 500px" });
+                    gsap.set(".practice-ambient", { rotation: "-=" + (0.02 * currentSpeedMult), transformOrigin: "500px 500px" });
 
                     orbitData.forEach(data => {
-                        data.angle += data.baseSpeed * currentMultiplier;
+                        data.angle += data.baseSpeed * currentSpeedMult;
                         
                         const cosA = Math.cos(data.angle);
                         const sinA = Math.sin(data.angle);
@@ -964,7 +952,17 @@
                         const x = data.cx + data.rx * cosA * cosPhi - data.ry * sinA * sinPhi;
                         const y = data.cy + data.rx * cosA * sinPhi + data.ry * sinA * cosPhi;
                         
-                        gsap.set(data.posObj, { x: x, y: y });
+                        // Z-Depth Illusion mapped directly from path coordinate
+                        const zDepth = (sinA + 1) / 2; 
+                        let depthScale = 0.85 + (zDepth * 0.3); // Range: 0.85 to 1.15
+                        let depthOpacity = 0.4 + (zDepth * 0.6); // Range: 0.4 to 1.0
+                        
+                        // Always ensure full legibility if node is active
+                        if (data.id === activeNodeId) {
+                            depthOpacity = Math.max(depthOpacity, 0.8); 
+                        }
+
+                        gsap.set(data.posObj, { x: x, y: y, scale: depthScale, opacity: depthOpacity });
                         
                         if (data.id === activeNodeId) {
                             gsap.set(data.connObj, { attr: { x1: 500, y1: 500, x2: x, y2: y } });
@@ -972,14 +970,14 @@
                     });
                 });
 
-                // 3. Editorial Content Transistion & System Manager
+                // 3. Editorial Content Transition & System Manager
                 window.activateNode = function(id, immediate = false) {
                     if (activeNodeId === id) return;
                     activeNodeId = id;
                     
                     const dur = immediate ? 0 : 0.6;
+                    currentSpeedMult = 0; // Brief cinematic pause on interaction
 
-                    // KILL TWEENS
                     gsap.killTweensOf([".practice-desc-anim", ".practice-title-anim", ".practice-core-pulse"]);
 
                     gsap.fromTo(".practice-core-pulse", 
@@ -989,21 +987,25 @@
 
                     orbitData.forEach(data => {
                         const isActive = data.id === id;
+                        const nodeEl = select(data.nodeObj);
+                        const microLabel = nodeEl.querySelector('.node-micro-label');
                         
-                        gsap.killTweensOf([data.nodeObj, data.nodeObj + " .practice-dot", data.nodeObj + " .practice-ring", data.trackObj, data.connObj]);
+                        gsap.killTweensOf([data.nodeObj, data.nodeObj + " .practice-dot", data.nodeObj + " .practice-ring", data.trackObj, data.connObj, microLabel]);
                         
                         if (isActive) {
-                            gsap.to(data.nodeObj, { scale: 1, duration: dur, ease: "power2.out" }); 
-                            gsap.to(data.nodeObj + " .practice-dot", { fill: "#D0E6FD", scale: 1.3, duration: dur, ease: "power2.out" });
-                            gsap.to(data.nodeObj + " .practice-ring", { stroke: "#D0E6FD", scale: 1.1, opacity: 1, duration: dur, ease: "power2.out" });
+                            gsap.to(data.nodeObj, { scale: 1.15, duration: dur, ease: "back.out(1.5)" }); 
+                            gsap.to(nodeEl.querySelector('.practice-dot'), { fill: "#D0E6FD", scale: 1.3, duration: dur, ease: "power2.out" });
+                            gsap.to(nodeEl.querySelector('.practice-ring'), { stroke: "#D0E6FD", scale: 1.1, opacity: 1, duration: dur, ease: "power2.out" });
                             gsap.to(data.trackObj, { strokeOpacity: 0.8, strokeWidth: 1, duration: dur });
                             gsap.to(data.connObj, { opacity: 0.5, duration: dur });
+                            if(microLabel) gsap.to(microLabel, { opacity: 0, y: 0, duration: dur/2 });
                         } else {
                             gsap.to(data.nodeObj, { scale: 1, duration: dur, ease: "power2.out" });
-                            gsap.to(data.nodeObj + " .practice-dot", { fill: "#F1E4D1", scale: 1, duration: dur, ease: "power2.out" });
-                            gsap.to(data.nodeObj + " .practice-ring", { stroke: "#F1E4D1", scale: 1, opacity: 0.3, duration: dur, ease: "power2.out" });
+                            gsap.to(nodeEl.querySelector('.practice-dot'), { fill: "#F1E4D1", scale: 1, duration: dur, ease: "power2.out" });
+                            gsap.to(nodeEl.querySelector('.practice-ring'), { stroke: "#F1E4D1", scale: 1, opacity: 0.3, duration: dur, ease: "power2.out" });
                             gsap.to(data.trackObj, { strokeOpacity: 0.15, strokeWidth: 0.5, duration: dur });
                             gsap.to(data.connObj, { opacity: 0, duration: Math.max(dur, 0.2) });
+                            if(microLabel) gsap.to(microLabel, { opacity: 0, y: 0, duration: dur/2 });
                         }
                     });
 
@@ -1016,7 +1018,7 @@
                         gsap.set(".practice-desc-anim", { y: 0, opacity: 1 });
                         gsap.set(".practice-title-anim", { x: 0, opacity: 1 });
                     } else {
-                        // Bespoke directional transition
+                        // Bespoke directional transition (No Layout Shift, pure opacity/transform)
                         gsap.to(".practice-desc-anim", { y: -8, opacity: 0, duration: 0.3, ease: "power2.in" });
                         gsap.to(".practice-title-anim", { x: -12, opacity: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
                             select("#practice-panel-title").innerText = activeData.title;
@@ -1054,26 +1056,41 @@
                     if (!isTouchDevice) {
                         node.addEventListener('mouseenter', function() {
                             const id = parseInt(this.getAttribute('data-id'));
-                            if (id !== activeNodeId) gsap.to(this.querySelector('.practice-ring'), { scale: 1.05, strokeOpacity: 0.7, duration: 0.3 });
+                            hoveredNodeId = id;
+                            if (id !== activeNodeId) {
+                                gsap.to(this, { scale: 1.08, duration: 0.4, ease: "power2.out" });
+                                gsap.to(this.querySelector('.practice-ring'), { scale: 1.05, strokeOpacity: 0.8, duration: 0.4 });
+                                gsap.to(this.querySelector('.node-micro-label'), { opacity: 1, y: -4, duration: 0.4, ease: "power2.out" });
+                            }
                         });
                         node.addEventListener('mouseleave', function() {
                             const id = parseInt(this.getAttribute('data-id'));
-                            if (id !== activeNodeId) gsap.to(this.querySelector('.practice-ring'), { scale: 1, strokeOpacity: 0.3, duration: 0.3 });
+                            hoveredNodeId = null;
+                            if (id !== activeNodeId) {
+                                gsap.to(this, { scale: 1, duration: 0.4, ease: "power2.out" });
+                                gsap.to(this.querySelector('.practice-ring'), { scale: 1, strokeOpacity: 0.3, duration: 0.4 });
+                                gsap.to(this.querySelector('.node-micro-label'), { opacity: 0, y: 0, duration: 0.4, ease: "power2.in" });
+                            }
                         });
                     }
                 });
 
-                // 4. Safely Recoverable Visibility
+                // 4. Safely Recoverable Visibility via robust scrollTrigger actions
                 const practiceElements = ["#practice-system-wrapper", ".practice-title-wrapper", ".practice-desc-wrapper"];
                 
                 gsap.fromTo(practiceElements, 
                     { opacity: 0 }, 
-                    { opacity: 1, ease: "none", scrollTrigger: { trigger: "#practice", start: "top 75%", end: "top 25%", scrub: true, invalidateOnRefresh: true } }
-                );
-                
-                gsap.fromTo(practiceElements, 
-                    { opacity: 1 }, 
-                    { opacity: 0, ease: "none", scrollTrigger: { trigger: "#practice", start: "bottom 75%", end: "bottom 25%", scrub: true, invalidateOnRefresh: true } }
+                    { 
+                        opacity: 1, 
+                        duration: 1.2,
+                        ease: "power2.out", 
+                        scrollTrigger: { 
+                            trigger: "#practice", 
+                            start: "top 75%", 
+                            end: "bottom 25%", 
+                            toggleActions: "play reverse play reverse"
+                        } 
+                    }
                 );
 
                 // 5. One-time Path Building Cinematic
